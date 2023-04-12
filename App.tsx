@@ -1,20 +1,23 @@
+import 'react-native-gesture-handler';
+import { useFonts } from 'expo-font';
+import Main from './src/main';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
+  const [isFontsLoaded] = useFonts({
+    'GeneralSans-400': require('./src/assets/fonts/regular.otf'),
+    'GeneralSans-600': require('./src/assets/fonts/semi.otf'),
+    'GeneralSans-700': require('./src/assets/fonts/bold.otf'),
+  });
+
+  if(!isFontsLoaded){
+    return null;
+  }
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <Main/>
+      <StatusBar style='dark'/>
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
