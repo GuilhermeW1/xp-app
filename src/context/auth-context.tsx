@@ -18,15 +18,16 @@ interface UserType {
 }
 
 interface AuthContextType {
-  user: UserType | undefined;
+  user: UserType | null;
   signInWithEmailAndPassword: (email: string, password: string) => void;
   createNewUser: (email: string, password: string) => void
+  signOut(): void;
 }
 
 const AuthContext = createContext({} as AuthContextType);
 
 export function AuthContextProvider({children}: AuthContextProviderType) {
-  const [user, setUser] = useState<UserType>();
+  const [user, setUser] = useState<UserType | null>(null);
 
   const signInWithEmailAndPassword = async(email: string, password: string) => {
     const {user} = await signIn({email, password});
@@ -53,8 +54,12 @@ export function AuthContextProvider({children}: AuthContextProviderType) {
 
   };
 
+  function signOut (){
+    setUser(null);
+  }
+
   return(
-    <AuthContext.Provider value={{signInWithEmailAndPassword, user, createNewUser}}>
+    <AuthContext.Provider value={{signInWithEmailAndPassword, user, createNewUser, signOut}}>
       {children}
     </AuthContext.Provider>
   );

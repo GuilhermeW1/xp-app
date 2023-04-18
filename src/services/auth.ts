@@ -1,5 +1,6 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, UserCredential } from 'firebase/auth';
-import { addDoc, collection, DocumentData, getDoc, getDocs, query, where } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, query, setDoc, where } from 'firebase/firestore';
+import type { DocumentData } from 'firebase/firestore';
 // import { push, ref } from 'firebase/database';
 import { FIREBASE_AUTH, FIREBASE_DB } from '../../firebaseConfig';
 
@@ -25,6 +26,7 @@ export async function createUser({email, password}: createUserProps): Promise<Us
 
     await addDoc(collection(FIREBASE_DB,'Users'), {
       userId,
+      email,
       isAdmin: false,
     });
     return user;
@@ -39,7 +41,6 @@ export async function signIn({email, password}: signInPops) {
     const user = await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
     return user;
   }catch(error){
-    console.log(error);
     throw new Error('Erro ao logar');
   }
 }

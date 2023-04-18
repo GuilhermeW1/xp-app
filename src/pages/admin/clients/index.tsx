@@ -1,10 +1,18 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text } from '../../../components/Text';
+import { useAuth } from '../../../context/auth-context';
+import { Container, LogoutButton } from './styles';
 
 export function Clients(){
+  const {signOut} = useAuth();
   return (
-    <View>
+    <Container>
+      <LogoutButton
+        onPress={signOut}
+      >
+        <Text>Sign Out</Text>
+      </LogoutButton>
       <Text>Clients page</Text>
-    </View>
+    </Container>
   );
 }

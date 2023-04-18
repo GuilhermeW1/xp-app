@@ -1,16 +1,34 @@
 
-import { CalendarContainer, Check, CheckBoxContainer, Container, OptionsContaier, SendConfigurations } from './styles';
+import { CalendarContainer, Check, CheckBoxContainer, Container, HorarioBox, HorarioContainer, HoraStart, OptionsContaier, SendConfigurations } from './styles';
 import { Text } from '../../../components/Text';
 import CustomCalendar from '../../../components/CustomCalendar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {AntDesign} from '@expo/vector-icons';
 import type { DateData, MarkedDates } from 'react-native-calendars/src/types';
-
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { FIREBASE_DB } from '../../../../firebaseConfig';
+import { formatStringDate, getYearMontSring } from '../../../utils/date';
 
 export function Home(){
   const [notWorkAtWeekends, setNotWorkAtWeekend] = useState(false);
   const [selected, setSelected] = useState<MarkedDates>({});
-  console.log(selected);
+
+  useEffect(()=> {
+    const mes = getYearMontSring();
+    const dockRef = doc(FIREBASE_DB, 'Atendimento', mes);
+    const getData = async () => {
+      const dataSnap = await getDoc(dockRef);
+      const dates = dataSnap.data();
+      const mark = {} as MarkedDates;
+      dates?.days.map((day: string) => (
+        mark[day] = {selected: true, selectedColor: 'red'}
+      ));
+
+      setSelected(mark);
+    };
+
+    getData();
+  }, []);
 
   function handelDisableWeekend(){
     const mark = {} as MarkedDates;
@@ -31,23 +49,10 @@ export function Home(){
       const date = new Date(`${year}-${month}-${i}`);
       const dateString = `${year}-${month}-${i}`;
       if(date.getDay() == 5 || date.getDay() == 6){
-        mark[format(dateString)] = { selectedColor: 'red', selected: true};
+        mark[formatStringDate(dateString)] = { selectedColor: 'red', selected: true};
       }
     }
-
     setSelected({...selected, ...mark});
-  }
-
-  function format(date: string){
-    let d: string;
-    let m: string;
-    const [year, month, day] = date.split('-');
-
-    // eslint-disable-next-line prefer-const
-    m = month.length != 2 ? '0' + month : month;
-    // eslint-disable-next-line prefer-const
-    d = day.length != 2 ? '0' + day : day;
-    return `${year}-${m}-${d}`;
   }
 
   function handleEnableWeekend(){
@@ -69,10 +74,9 @@ export function Home(){
       const date = new Date(`${year}-${month}-${i}`);
       const dateString = `${year}-${month}-${i}`;
       if(date.getDay() == 5 || date.getDay() == 6){
-        mark[format(dateString)] = { selectedColor: '', selected: false};
+        mark[formatStringDate(dateString)] = { selectedColor: '', selected: false};
       }
     }
-    // console.log(mark);
     setSelected({...selected, ...mark});
   }
 
@@ -101,8 +105,20 @@ export function Home(){
     }else{
       mark[currentDate] = {selected: true, selectedColor: 'red'};
     }
-
     setSelected({...selected, ...mark});
+  }
+
+  async function sendDaysToWork(){
+    const days = [];
+    for (const [key, value] of Object.entries(selected)){
+      if(value.selected){
+        days.push(key);
+      }
+    }
+    const dateId = getYearMontSring();
+    await setDoc(doc(FIREBASE_DB, 'Atendimento', dateId), {
+      days
+    });
   }
 
   return (
@@ -121,10 +137,28 @@ export function Home(){
             {notWorkAtWeekends ? <AntDesign name="check" size={24} color="green" /> : null }
           </Check>
         </CheckBoxContainer>
+        <SendConfigurations
+          onPress={sendDaysToWork}
+        >
+          <Text size={20} color='#fff'>Salvar configuraçoes</Text>
+        </SendConfigurations>
       </OptionsContaier>
-      <SendConfigurations>
-        <Text size={20} color='#fff'>Salvar configuraçoes</Text>
-      </SendConfigurations>
     </Container>
   );
 }
+
+
+// <HorarioContainer>
+// <Text>Horario de atendimento</Text>
+// <HorarioBox>
+//   <Text weight='600'>Hora Inicio</Text>
+//   <HoraStart
+
+//   />
+// </HorarioBox>
+// <HorarioBox>
+//   <Text weight='600'>Hora fim</Text>
+//   <HoraStart
+//   />
+// </HorarioBox>
+// </HorarioContainer>
