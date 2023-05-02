@@ -11,7 +11,6 @@ const Tab = createBottomTabNavigator();
 export default function AdminRoutes(){
   return(
     <Container>
-
       <Tab.Navigator screenOptions={{headerShown: false}}>
         <Tab.Screen
           name='Dashboard'
