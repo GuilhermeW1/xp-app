@@ -1,31 +1,23 @@
 import { addDoc, collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import { FIREBASE_DB } from '../../../../firebaseConfig';
 import { Text } from '../../../components/Text';
-
-import { useAuth } from '../../../context/auth-context';
-import { Container, CreateService, DeleteService, EditContainer, EditService, InfoContainer, Separetor, ServiceContainer, SignOutButton } from './styles';
+import { Container, CreateService, DeleteService, EditContainer, EditService, InfoContainer, Separetor, ServiceContainer } from './styles';
 import { AntDesign } from '@expo/vector-icons';
 import { formatCurrency } from '../../../utils/formatCurrency';
 import { CreateServiceModal } from '../../../components/create-service-modal';
 
-export interface ServicesProps {
-  id: string;
-  name: string;
-  price: number;
-  time: number;
-}
+import type { Service } from '../../../types/service';
 
-export type CreateService = Omit<ServicesProps, 'id'>
+export type CreateService = Omit<Service, 'id'>
 
-export type UpdateService = ServicesProps
+export type UpdateService = Service
 
 export function Dashboard(){
-  const {signOut} = useAuth();
-  const [services, setServices] = useState<ServicesProps[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
   const [modalVisibility, setModalVisibility] = useState(false);
-  const [service, setService] = useState<null | ServicesProps>(null);
+  const [service, setService] = useState<null | Service>(null);
 
   const handleCloseModal = useCallback(() => {
     setService(null);
@@ -37,7 +29,7 @@ export function Dashboard(){
     setModalVisibility(true);
   },[]);
 
-  function handleEditServiceModal(service: ServicesProps){
+  function handleEditServiceModal(service: Service){
     setService(service);
     setModalVisibility(true);
   }
@@ -116,7 +108,7 @@ export function Dashboard(){
 
   useEffect(() => {
     const getServices = async() => {
-      const dbService: ServicesProps[] = [];
+      const dbService: Service[] = [];
       try{
         const querySnapshot = await getDocs(collection(FIREBASE_DB, 'Servicos'));
 

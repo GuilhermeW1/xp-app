@@ -7,8 +7,8 @@ import { ActivityIndicator } from 'react-native';
 import { Link } from '@react-navigation/native';
 
 const SignIn: React.FC = () => {
-  const [email, setEmail] = useState<string>('gui.a.weiss@hotmail.com');
-  const [password, setPassword] = useState<string>('weiss1234');
+  const [email, setEmail] = useState<string>('teste123@gmail.com');
+  const [password, setPassword] = useState<string>('12345678');
   const [isLoading, setIsLoading] = useState(false);
   const [invalidCredentials, setInvalidCredentials] = useState<null | boolean>(null);
 
@@ -66,9 +66,7 @@ const SignIn: React.FC = () => {
       </LoginFormContainer>
 
       <Link to={{screen: 'CreateAccount'}}>
-
         <Text style={{textDecorationLine: 'underline'}} size={16} color='blue'>Criar conta</Text>
-
       </Link>
     </Container>
   );

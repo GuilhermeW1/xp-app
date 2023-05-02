@@ -1,16 +1,15 @@
-import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { Modal } from 'react-native';
-import { FIREBASE_DB } from '../../../firebaseConfig';
 import { Text } from '../Text';
 import { CreateServiceButton, ModalBody, NameInput, Overlay, TimeInput, ValueInput, CloseModal, ModalOptionsSave, CancelServiceButton, ModalHeader } from './styles';
 import {AntDesign} from '@expo/vector-icons';
-import { CreateService, ServicesProps, UpdateService } from '../../pages/admin/dashboard';
+import { CreateService, UpdateService } from '../../pages/admin/dashboard';
+import type { Service } from '../../types/service';
 
 interface ModalProps {
   visible: boolean,
   closeModal: () => void,
-  service: ServicesProps | null,
+  service: Service | null,
   cancelEditService: () => void,
   createService: (service: CreateService) => Promise<void>
   editService: (service: UpdateService) => Promise<void>
