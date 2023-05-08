@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { Text } from '../../../components/Text';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { Container, CreateAccountButton, EmailTextInput, LoginFormContainer, PasswordTextInput, SignInButton } from './styles';
+import { Container, EmailTextInput, LoginFormContainer, PasswordContainer, PasswordTextInput, SignInButton, ToggleVisible } from './styles';
 import { useAuth } from '../../../context/auth-context';
 import { ActivityIndicator } from 'react-native';
 import { Link } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
+
 
 const SignIn: React.FC = () => {
-  const [email, setEmail] = useState<string>('teste123@gmail.com');
-  const [password, setPassword] = useState<string>('12345678');
+  const [email, setEmail] = useState<string>('gui.a.weiss@hotmail.com');
+  const [password, setPassword] = useState<string>('weiss1234');
   const [isLoading, setIsLoading] = useState(false);
   const [invalidCredentials, setInvalidCredentials] = useState<null | boolean>(null);
+  const [passwordVisibility, setPaswordVisibility] = useState<boolean>(true);
 
   const {signInWithEmailAndPassword} = useAuth();
 
@@ -47,16 +50,29 @@ const SignIn: React.FC = () => {
           value={email}
           onChangeText={setEmail}
         />
-        <PasswordTextInput
-          placeholder='senha'
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
-        />
+        <PasswordContainer>
+
+          <PasswordTextInput
+            placeholder='senha'
+            secureTextEntry={passwordVisibility}
+            value={password}
+            onChangeText={setPassword}
+          />
+          <ToggleVisible
+            onPress={() => setPaswordVisibility(!passwordVisibility)}
+          >
+            <Text>
+              {passwordVisibility ? <Ionicons name="eye-off-outline" size={24} color="orange" /> :
+                <Ionicons name="eye-outline" size={24} color="orange" />
+              }
+            </Text>
+          </ToggleVisible>
+        </PasswordContainer>
         <SignInButton
           onPress={handleSignIn}
+          disabled={isLoading}
         >
-          {isLoading ? <ActivityIndicator size={24}/> : (
+          {isLoading ? <ActivityIndicator size='small' color='#FF6000'/> : (
             <>
               <Text weight='400' size={24} color='#fff'>Entrar</Text>
               <SimpleLineIcons name='login' size={24} color='#fff'/>

@@ -1,23 +1,28 @@
 import { addDoc, collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore';
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList } from 'react-native';
+import { ActivityIndicator, FlatList } from 'react-native';
 import { FIREBASE_DB } from '../../../../firebaseConfig';
 import { Text } from '../../../components/Text';
-import { Container, CreateService, DeleteService, EditContainer, EditService, InfoContainer, Separetor, ServiceContainer } from './styles';
+import { CenteredContainer, Container, CreateService, DeleteService, EditContainer, EditService, InfoContainer, Separetor, ServiceContainer } from './styles';
 import { AntDesign } from '@expo/vector-icons';
 import { formatCurrency } from '../../../utils/formatCurrency';
 import { CreateServiceModal } from '../../../components/create-service-modal';
 
 import type { Service } from '../../../types/service';
+import { DeleteModal } from '../../../components/delete-modal';
+
 
 export type CreateService = Omit<Service, 'id'>
 
 export type UpdateService = Service
 
 export function Dashboard(){
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [services, setServices] = useState<Service[]>([]);
   const [modalVisibility, setModalVisibility] = useState(false);
   const [service, setService] = useState<null | Service>(null);
+  const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+  const [deleteId, setDeleteId] = useState<string>('');
 
   const handleCloseModal = useCallback(() => {
     setService(null);
@@ -35,7 +40,6 @@ export function Dashboard(){
   }
 
   function cancelEditService(){
-    console.log('rendered');
     setService(null);
     setModalVisibility(false);
   }
@@ -44,6 +48,7 @@ export function Dashboard(){
     try{
       await deleteDoc(doc(FIREBASE_DB, 'Servicos', id));
       setServices(prev => prev.filter(el => el.id != id));
+      setDeleteModalVisible(false);
     }catch(err){
       throw new Error('erro ao deletar arquivo');
     }
@@ -71,6 +76,7 @@ export function Dashboard(){
     }catch(error){
       throw new Error('Erro ao criar um servico');
     }
+    setService(null);
     alert('servico criado');
     handleCloseModal();
   }
@@ -102,11 +108,16 @@ export function Dashboard(){
     }catch(error){
       throw new Error('Erro ao editar servico');
     }
-    alert('servico criado');
     handleCloseModal();
   }
 
+  function handleDelete(id: string){
+    setDeleteId(id);
+    setDeleteModalVisible(true);
+  }
+
   useEffect(() => {
+    setIsLoading(true);
     const getServices = async() => {
       const dbService: Service[] = [];
       try{
@@ -128,6 +139,7 @@ export function Dashboard(){
       setServices(dbService);
     };
     getServices();
+    setIsLoading(false);
   },[]);
 
   return (
@@ -136,34 +148,41 @@ export function Dashboard(){
       <CreateService
         onPress={handleOpenModal}
       >
-        <Text>Adicionar servico +</Text>
+        <Text color='#fff' weight='600'>Adicionar servico +</Text>
       </CreateService>
-      <FlatList
-        data={services}
-        keyExtractor={(service) => service.id}
-        ItemSeparatorComponent={Separetor}
-        renderItem={({item: service}) => (
-          <ServiceContainer>
-            <InfoContainer>
-              <Text weight='600'>{service.name}</Text>
-              <Text size={14} >Tempo: {service.time} min</Text>
-              <Text size={14} color='#666'>{formatCurrency(service.price)}</Text>
-            </InfoContainer>
-            <EditContainer>
-              <EditService
-                onPress={() => handleEditServiceModal(service)}
-              >
-                <AntDesign name='edit' size={24} color='black'/>
-              </EditService>
-              <DeleteService
-                onPress={() => handleDeleteService(service.id)}
-              >
-                <AntDesign name='delete' size={24} color='red'/>
-              </DeleteService>
-            </EditContainer>
-          </ServiceContainer>
+      {isLoading ?
+        (
+          <CenteredContainer>
+            <ActivityIndicator size='large' color='#FF6000' />
+          </CenteredContainer>
+        ) : (
+          <FlatList
+            data={services}
+            keyExtractor={(service) => service.id}
+            ItemSeparatorComponent={Separetor}
+            renderItem={({item: service}) => (
+              <ServiceContainer>
+                <InfoContainer>
+                  <Text weight='600'>{service.name}</Text>
+                  <Text size={14} >Tempo: {service.time} min</Text>
+                  <Text size={14} color='#666'>{formatCurrency(service.price)}</Text>
+                </InfoContainer>
+                <EditContainer>
+                  <EditService
+                    onPress={() => handleEditServiceModal(service)}
+                  >
+                    <AntDesign name='edit' size={24} color='black'/>
+                  </EditService>
+                  <DeleteService
+                    onPress={() => handleDelete(service.id)}
+                  >
+                    <AntDesign name='delete' size={24} color='red'/>
+                  </DeleteService>
+                </EditContainer>
+              </ServiceContainer>
+            )}
+          />
         )}
-      />
 
       <CreateServiceModal
         visible={modalVisibility}
@@ -172,6 +191,12 @@ export function Dashboard(){
         cancelEditService={cancelEditService}
         createService={handleCreateService}
         editService={handleEditService}
+      />
+      <DeleteModal
+        visible={deleteModalVisible}
+        onDelete={handleDeleteService}
+        id={deleteId}
+        onClose={() => setDeleteModalVisible(false)}
       />
     </Container>
   );

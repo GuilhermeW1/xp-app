@@ -19,15 +19,9 @@ export const ModalBody = styled.View`
 
 `;
 
-export const Header = styled.View`
+export const Container = styled.View`
   flex-direction: row;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 24px;
-  justify-content: space-between;
+  justify-content: space-around;
 `;
 
-export const CloseModal = styled.TouchableOpacity`
-
-
-`;

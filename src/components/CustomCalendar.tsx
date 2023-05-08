@@ -26,7 +26,7 @@ LocaleConfig.defaultLocale = 'br';
 
 interface CustomCalendarProps {
   selected: MarkedDates;
-  handleSelectDay: (date: DateData) => void
+  handleSelectDay: (date: DateData) => void;
 }
 
 export default function CustomCalendar({selected, handleSelectDay}: CustomCalendarProps){
@@ -127,10 +127,10 @@ export default function CustomCalendar({selected, handleSelectDay}: CustomCalend
   //   return formated;
   // }
 
+  //aqui tinha uma margem de 20px para tela do adm
   return(
     <Calendar
       markedDates={selected}
-      style={{margin: 20}}
       disableAllTouchEventsForDisabledDays
       disabledDaysIndexes={[0,6]}
       onDayPress={(date) => handleSelectDay(date)}

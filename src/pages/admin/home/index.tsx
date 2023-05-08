@@ -1,34 +1,53 @@
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet } from 'react-native';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-import { CalendarContainer, Check, CheckBoxContainer, Container, HorarioBox, HorarioContainer, HoraStart, OptionsContaier, SendConfigurations } from './styles';
 import { Text } from '../../../components/Text';
 import CustomCalendar from '../../../components/CustomCalendar';
-import { useEffect, useState } from 'react';
-import {AntDesign} from '@expo/vector-icons';
+
 import type { DateData, MarkedDates } from 'react-native-calendars/src/types';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+
+import {
+  AfternoonContainer,
+  CalendarContainer,
+  CenteredContainer,
+  Check,
+  CheckBoxContainer,
+  Container,
+  MorningContainer,
+  OptionsContaier,
+  SendConfigurations,
+  ServiceContainer,
+  ServiceHourSelection } from './styles';
+import {AntDesign} from '@expo/vector-icons';
 import { FIREBASE_DB } from '../../../../firebaseConfig';
 import { formatStringDate, getYearMontSring } from '../../../utils/date';
+import { Button } from '../../../components/button';
+import { RangeModal } from '../../../components/range-hour-modal';
+
+
+export interface HourInterface {
+  from: {
+    hour: string;
+    minutes: string;
+  },
+  to: {
+    hour: string;
+    minutes: string;
+  }
+
+}
 
 export function Home(){
+  const init = {from: {hour: '00', minutes: '00'}, to: {hour: '00', minutes: '00'}};
   const [notWorkAtWeekends, setNotWorkAtWeekend] = useState(false);
   const [selected, setSelected] = useState<MarkedDates>({});
-
-  useEffect(()=> {
-    const mes = getYearMontSring();
-    const dockRef = doc(FIREBASE_DB, 'Atendimento', mes);
-    const getData = async () => {
-      const dataSnap = await getDoc(dockRef);
-      const dates = dataSnap.data();
-      const mark = {} as MarkedDates;
-      dates?.days.map((day: string) => (
-        mark[day] = {selected: true, selectedColor: 'red'}
-      ));
-
-      setSelected(mark);
-    };
-
-    getData();
-  }, []);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [morningHour, setMorningHour] = useState<HourInterface>(init);
+  const [afternoonHour, setAfternoonHour] = useState<HourInterface>(init);
+  const [rangeModalVisibility, setRangeModalVisibility] = useState<boolean>(false);
+  const [rangeModalData, setRangeModalData] = useState('');
+  const [error, setError] = useState('');
 
   function handelDisableWeekend(){
     const mark = {} as MarkedDates;
@@ -108,7 +127,13 @@ export function Home(){
     setSelected({...selected, ...mark});
   }
 
+  //melhorar esse nome
   async function sendDaysToWork(){
+    if(morningHour.from.hour === '00' || afternoonHour.from.hour === '00' ||
+      morningHour.to.hour === '00' || afternoonHour.to.hour === '00'){
+      setError('Horario nao selecionado');
+      return;
+    }
     const days = [];
     for (const [key, value] of Object.entries(selected)){
       if(value.selected){
@@ -117,35 +142,137 @@ export function Home(){
     }
     const dateId = getYearMontSring();
     await setDoc(doc(FIREBASE_DB, 'Atendimento', dateId), {
+      morningHour,
+      afternoonHour,
       days
     });
   }
 
+  //it should be morning or afternoon/night but i cant found a good name to it
+  function handleSelectHour(dayStatus: string){
+    if(dayStatus == 'morning'){
+      setRangeModalData('morning');
+      setRangeModalVisibility(true);
+    }
+    if(dayStatus === 'afternoon'){
+      setRangeModalData('afternoon');
+      setRangeModalVisibility(true);
+    }
+  }
+
+  function handleSetMorningHour(hour: HourInterface){
+    setMorningHour(hour);
+    onCloseRangeModal();
+  }
+
+  function handleSetAfternoonHour(hour: HourInterface){
+    setAfternoonHour(hour);
+    onCloseRangeModal();
+  }
+
+  function onCloseRangeModal(){
+    setRangeModalVisibility(false);
+  }
+
+  useEffect(()=> {
+    setIsLoading(true);
+    const mes = getYearMontSring();
+    const dockRef = doc(FIREBASE_DB, 'Atendimento', mes);
+    const getData = async () => {
+      const dataSnap = await getDoc(dockRef);
+      const dates = dataSnap.data();
+      if(!dates){
+        return;
+      }
+      const mark = {} as MarkedDates;
+      dates?.days.map((day: string) => (
+        mark[day] = {selected: true, selectedColor: 'red'}
+      ));
+
+      setAfternoonHour(dates?.afternoonHour);
+      setMorningHour(dates?.morningHour);
+      setSelected(mark);
+    };
+
+    getData();
+    setIsLoading(false);
+  }, []);
+
+
   return (
     <Container>
       <CalendarContainer>
-        <Text weight='600' size={16} style={{alignSelf: 'center'}}>Selecione os dias que ira atender</Text>
-        <CustomCalendar selected={selected} handleSelectDay={handleSelectDay}/>
+        <Text weight='600' size={16} style={{alignSelf: 'center', marginBottom: 16}}>Selecione os dias que ira atender</Text>
+        {isLoading ? (
+          <CenteredContainer>
+            <ActivityIndicator size='large' />
+          </CenteredContainer>
+        ) :
+          <CustomCalendar selected={selected} handleSelectDay={handleSelectDay}/>
+        }
       </CalendarContainer>
-
       <OptionsContaier>
         <CheckBoxContainer
           onPress={handleSelectNotWorkAtWeekends}
         >
-          <Text size={20}>Nao atender fins de semana</Text>
+          <Text size={16}>Nao atender fins de semana</Text>
           <Check>
             {notWorkAtWeekends ? <AntDesign name="check" size={24} color="green" /> : null }
           </Check>
         </CheckBoxContainer>
-        <SendConfigurations
+        <ServiceContainer>
+          <Text style={{alignSelf: 'center', marginTop: 24, marginBottom: 8}} weight='600'>Horario de atendimento</Text>
+          <ServiceHourSelection>
+            <MorningContainer
+              onPress={() => handleSelectHour('morning')}
+            >
+              <Text style={{alignSelf: 'center'}}>Manhã</Text>
+              <Text>
+                {`${morningHour.from.hour}:${morningHour.from.minutes} `}
+                ás
+                {` ${morningHour.to.hour}:${morningHour.to.minutes}`}
+              </Text>
+            </MorningContainer>
+            <AfternoonContainer
+              onPress={() => handleSelectHour('afternoon')}
+            >
+              <Text style={{alignSelf: 'center'}}>Tarde/noite</Text>
+              <Text>
+                {`${afternoonHour.from.hour}:${afternoonHour.from.minutes} `}
+                ás
+                {` ${afternoonHour.to.hour}:${afternoonHour.to.minutes}`}
+              </Text>
+            </AfternoonContainer>
+          </ServiceHourSelection>
+        </ServiceContainer>
+        {error && (<Text color='red' size={16} style={{alignSelf: 'center', margin: 8}}>{error}</Text>)}
+        <Button
           onPress={sendDaysToWork}
         >
-          <Text size={20} color='#fff'>Salvar configuraçoes</Text>
-        </SendConfigurations>
+          Salvar configuraçoes
+        </Button>
       </OptionsContaier>
+      <RangeModal
+        visible={rangeModalVisibility}
+        setAfternoon={handleSetAfternoonHour}
+        setMorning={handleSetMorningHour}
+        status={rangeModalData}
+        onClose={onCloseRangeModal}
+      />
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  picker: {
+    width: 100,
+  },
+  separator: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginHorizontal: 5,
+  },
+});
 
 
 // <HorarioContainer>

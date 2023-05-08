@@ -30,3 +30,11 @@ export const SummaryInfo = styled.View`
   margin-right: 32px;
   flex: 1;
 `;
+
+export const CancelButton = styled.TouchableOpacity`
+  border: 1px solid #FF6000;
+  border-radius: 48px;
+  padding: 14px 24px;
+  align-items: center;
+  justify-content: center;
+`;

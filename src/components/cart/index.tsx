@@ -1,32 +1,28 @@
 import { FlatList } from 'react-native';
-import { Service } from '../../types/service';
 import { Text } from '../Text';
 import { CartItem } from '../../types/CartItem';
-import { Actions, InfoContainer, Item, ServiceInfo, Summary, SummaryInfo } from './styles';
+import { Actions, CancelButton, InfoContainer, Item, ServiceInfo, Summary, SummaryInfo } from './styles';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { Button } from '../button';
 import { AntDesign } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import type { RootStackParamList } from '../../types/Rotues';
 
 interface CartProps {
   cartItems: CartItem[];
-  handleRemoveCartItem: (item: CartItem) => void;
+  handleRemoveCartItem?: (item: CartItem) => void;
+  handleSchedule: () => void;
+  schedule: boolean;
+  handleCancelOrder: () => void;
 }
 
 
 
-export function Cart({cartItems, handleRemoveCartItem}: CartProps){
-  const {navigate} = useNavigation<StackNavigationProp<RootStackParamList>>();
-
-  const totalPrice = cartItems.reduce((acc, cartItem) => {
-    return acc + cartItem.item.price;
-  }, 0);
-
-  const totalTime = cartItems.reduce((acc, cartItem) => {
-    return acc + cartItem.item.time;
-  }, 0);
+export function Cart({cartItems, handleRemoveCartItem, handleSchedule, schedule, handleCancelOrder}: CartProps){
+  const {totalTime, totalPrice} = cartItems.reduce((acc, item) => {
+    return {
+      totalTime: acc.totalTime + item.item.time,
+      totalPrice: acc.totalPrice + item.item.price,
+    };
+  }, {totalTime: 0, totalPrice:0});
 
   function formatTime(time: number): string{
     if(time <=59 ){
@@ -59,11 +55,14 @@ export function Cart({cartItems, handleRemoveCartItem}: CartProps){
                   <Text size={14} color='#666'>{formatCurrency(service.item.price)}</Text>
                 </InfoContainer>
               </ServiceInfo>
-              <Actions
-                onPress={() => handleRemoveCartItem(service)}
-              >
-                <AntDesign name="minuscircleo" size={20} color="red" />
-              </Actions>
+
+              {handleRemoveCartItem && (
+                <Actions
+                  onPress={() => handleRemoveCartItem(service)}
+                >
+                  <AntDesign name="minuscircleo" size={20} color="red" />
+                </Actions>
+              )}
             </Item>
           )}
         />
@@ -85,14 +84,21 @@ export function Cart({cartItems, handleRemoveCartItem}: CartProps){
             )
           }
         </SummaryInfo>
-
-        <Button
-          disabled={cartItems.length === 0}
-          onPress={() => navigate('Schedule', {price: totalPrice, time: totalTime})}
-        >
-          Agendar Horario
-        </Button>
+        {schedule ? (
+          <CancelButton onPress={handleCancelOrder}>
+            <Text>Cancelar Pedido</Text>
+          </CancelButton>
+        ) : (
+          <Button
+            disabled={cartItems.length === 0}
+            onPress={handleSchedule}
+          >
+            Agendar Horario
+          </Button>
+        )}
       </Summary>
     </>
   );
 }
+
+//navigate('Schedule', {price: totalPrice, time: totalTime, cartItems})

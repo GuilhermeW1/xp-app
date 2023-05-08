@@ -16,7 +16,6 @@ interface ModalProps {
 }
 
 export function CreateServiceModal({visible, closeModal, service, cancelEditService, createService, editService}: ModalProps){
-  // console.log(service?.name);
   const [serviceName, setServiceName] = useState('');
   const [serviceTime, setServiceTime] = useState('');
   const [servicePrice, setServicePrice] = useState('');
@@ -37,11 +36,17 @@ export function CreateServiceModal({visible, closeModal, service, cancelEditServ
 
   async function handleCreateService(){
     await createService({name: serviceName, price: parseFloat(servicePrice), time: parseFloat(serviceTime)});
+    setServiceName('');
+    setServicePrice('');
+    setServiceTime('');
   }
 
   async function handleEditService(){
     if(!service) return;
     await editService({id: service.id, name: serviceName, price: parseFloat(servicePrice), time: parseFloat(serviceTime)});
+    setServiceName('');
+    setServicePrice('');
+    setServiceTime('');
   }
 
   return(

@@ -11,7 +11,7 @@ export const CreateService = styled.TouchableOpacity`
   padding: 12px;
   align-items: center;
   justify-content: center;
-  background: orange;
+  background: #FF6000;
 `;
 
 export const SignOutButton = styled.TouchableOpacity`
@@ -52,3 +52,9 @@ export const Separetor = styled.View`
 export const EditService = styled.TouchableOpacity``;
 
 export const DeleteService = styled.TouchableOpacity``;
+
+export const CenteredContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;

@@ -9,12 +9,12 @@ export const Container = styled.View`
 `;
 
 export const CalendarContainer = styled.View`
-  margin-top: 16px;
+  margin: 16px 20px 0px;
 `;
 
 export const OptionsContaier = styled.View`
   flex: 1;
-  margin: 0 20px;
+  margin: 0 20px 20px;
   align-items: stretch;
   justify-content: space-around;
 `;
@@ -44,22 +44,35 @@ export const SendConfigurations = styled.TouchableOpacity`
   padding: 12px;
 `;
 
-export const HorarioContainer = styled.View`
+export const CenteredContainer = styled.View`
+  justify-content: center;
+  height: 300px;
+  align-items: center;
+  ;
+`;
+
+export const PikerContainer = styled.View`
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ServiceHourSelection = styled.View`
   flex-direction: row;
   justify-content: space-around;
-  /* margin: 0 20px; */
+  align-items: flex-start;
+  flex:1;
 `;
 
-export const HorarioBox = styled.View`
-  justify-content: center;
-  align-items: center;
+export const ServiceContainer = styled.View`
+  flex: 1;
 `;
 
-export const HoraStart = styled.TextInput`
-  border: 1px solid black;
-  width: 100px;
-  border: 1px solid orange;
-
+export const MorningContainer = styled.TouchableOpacity`
+  gap: 8px;
 `;
 
-
+export const AfternoonContainer = styled.TouchableOpacity`
+  gap: 8px;
+`;

@@ -1,0 +1,45 @@
+import {  Modal } from 'react-native';
+import { Container, ModalBody, Overlay } from './styles';
+import { Button } from '../button';
+import { Text } from '../Text';
+
+export interface DeleteModal {
+    visible: boolean;
+    onDelete: (id: string) => Promise<void>;
+    id: string;
+    onClose: () => void
+}
+
+export function DeleteModal({visible, onDelete, id , onClose}: DeleteModal){
+  async function handleDelete(){
+    await onDelete(id);
+  }
+
+  return(
+    <Modal
+      visible={visible}
+      transparent
+    >
+      <Overlay>
+
+        <ModalBody>
+          <Text weight='600' size={20} style={{alignSelf: 'center', marginVertical: 16}}>Tem certeza que deseja excluir?</Text>
+          <Container>
+
+            <Button
+              onPress={handleDelete}
+            >
+              Ok
+            </Button>
+            <Button
+              onPress={onClose}
+            >
+              Cancel
+            </Button>
+          </Container>
+        </ModalBody>
+
+      </Overlay>
+    </Modal>
+  );
+}
