@@ -5,6 +5,8 @@ import { CreateServiceButton, ModalBody, NameInput, Overlay, TimeInput, ValueInp
 import {AntDesign} from '@expo/vector-icons';
 import { CreateService, UpdateService } from '../../pages/admin/dashboard';
 import type { Service } from '../../types/service';
+import { Button } from '../button';
+import { SecondaryButton } from '../secondary-button';
 
 interface ModalProps {
   visible: boolean,
@@ -85,24 +87,25 @@ export function CreateServiceModal({visible, closeModal, service, cancelEditServ
           />
           { service ? (
             <ModalOptionsSave>
-              <CancelServiceButton
+              <Button
                 onPress={cancelEditService}
               >
-                <Text>Cancelar</Text>
-              </CancelServiceButton>
-              <CreateServiceButton
+                Cancelar
+              </Button>
+              <SecondaryButton
                 onPress={handleEditService}
               >
-                <Text color='#666'>Salvar</Text>
-              </CreateServiceButton>
+
+                Salvar
+              </SecondaryButton>
             </ModalOptionsSave>
           ) :
             (
-              <CreateServiceButton
+              <Button
                 onPress={handleCreateService}
               >
-                <Text>Criar servico</Text>
-              </CreateServiceButton>
+                Criar servico
+              </Button>
             )
           }
 

@@ -1,11 +1,13 @@
 import { Picker } from '@react-native-picker/picker';
 import { Text } from '../Text';
 import { Modal, StyleSheet } from 'react-native';
-import { Container, ModalBody, Overlay } from './styles';
+import { CloseModal, Container, ModalBody, Overlay } from './styles';
 import { useState } from 'react';
 import { Button } from '../button';
 
 import type { HourInterface } from '../../pages/admin/home';
+
+import {AntDesign} from '@expo/vector-icons';
 
 interface RangeModalInterface {
   visible: boolean;
@@ -62,6 +64,11 @@ export function RangeModal({visible, setMorning, setAfternoon, status, onClose}:
       setAfternoon(hour);
     }
 
+    setFirstHour('00');
+    setSecondHour('00');
+    setFirstMinutes('00');
+    setSecondMinutes('00');
+    setError('');
   }
 
 
@@ -72,7 +79,8 @@ export function RangeModal({visible, setMorning, setAfternoon, status, onClose}:
     >
       <Overlay>
         <ModalBody>
-          {error && (<Text color='red' style={{alignSelf: 'center'}}>{error}</Text>) }
+          {error && (<Text color='red' style={{alignSelf: 'center'}}>{error}</Text>)}
+          <CloseModal onPress={onClose}><Text><AntDesign name="closecircleo" size={30} color="orange" /></Text></CloseModal>
           <Text>Das</Text>
           <Container>
             <Picker

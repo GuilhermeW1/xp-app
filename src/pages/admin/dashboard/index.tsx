@@ -3,13 +3,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList } from 'react-native';
 import { FIREBASE_DB } from '../../../../firebaseConfig';
 import { Text } from '../../../components/Text';
-import { CenteredContainer, Container, CreateService, DeleteService, EditContainer, EditService, InfoContainer, Separetor, ServiceContainer } from './styles';
+import { CenteredContainer, Container, DeleteService, EditContainer, EditService, InfoContainer, Separetor, ServiceContainer } from './styles';
 import { AntDesign } from '@expo/vector-icons';
 import { formatCurrency } from '../../../utils/formatCurrency';
 import { CreateServiceModal } from '../../../components/create-service-modal';
 
 import type { Service } from '../../../types/service';
 import { DeleteModal } from '../../../components/delete-modal';
+import { Button } from '../../../components/button';
 
 
 export type CreateService = Omit<Service, 'id'>
@@ -144,12 +145,7 @@ export function Dashboard(){
 
   return (
     <Container>
-      <Text style={{alignSelf: 'center', marginTop: 16}} weight='700' size={24}>Serviços</Text>
-      <CreateService
-        onPress={handleOpenModal}
-      >
-        <Text color='#fff' weight='600'>Adicionar servico +</Text>
-      </CreateService>
+      <Text style={{alignSelf: 'center', marginBottom: 16}} weight='700' size={24}>Serviços</Text>
       {isLoading ?
         (
           <CenteredContainer>
@@ -184,6 +180,12 @@ export function Dashboard(){
           />
         )}
 
+
+      <Button
+        onPress={handleOpenModal}
+      >
+        Adicionar servico +
+      </Button>
       <CreateServiceModal
         visible={modalVisibility}
         closeModal={handleCloseModal}

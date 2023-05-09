@@ -1,10 +1,11 @@
 import { FlatList } from 'react-native';
 import { Text } from '../Text';
 import { CartItem } from '../../types/CartItem';
-import { Actions, CancelButton, InfoContainer, Item, ServiceInfo, Summary, SummaryInfo } from './styles';
+import { Actions, InfoContainer, Item, ServiceInfo, Summary, SummaryInfo } from './styles';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { Button } from '../button';
 import { AntDesign } from '@expo/vector-icons';
+import { SecondaryButton } from '../secondary-button';
 
 interface CartProps {
   cartItems: CartItem[];
@@ -85,9 +86,9 @@ export function Cart({cartItems, handleRemoveCartItem, handleSchedule, schedule,
           }
         </SummaryInfo>
         {schedule ? (
-          <CancelButton onPress={handleCancelOrder}>
-            <Text>Cancelar Pedido</Text>
-          </CancelButton>
+          <SecondaryButton onPress={handleCancelOrder}>
+            Cancelar Pedido
+          </SecondaryButton>
         ) : (
           <Button
             disabled={cartItems.length === 0}

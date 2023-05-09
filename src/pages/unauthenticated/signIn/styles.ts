@@ -15,14 +15,13 @@ export const Container = styled.SafeAreaView`
 export const SignInButton = styled.TouchableOpacity`
   flex-direction: row;
   color: orange;
-  height: 30px;
+  padding: 14px 24px;
   background: ${({disabled}) => disabled? '#999' : '#FF6000'};
   display: flex;
   align-items: center;
   justify-content: center;
   width: 250px;
-  border-radius: 8px;
-  height: 48px;
+  border-radius: 48px;
   gap: 16px;
 `;
 

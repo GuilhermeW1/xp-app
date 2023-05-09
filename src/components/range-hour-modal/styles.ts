@@ -23,3 +23,9 @@ export const Container = styled.View`
   align-items: center;
   justify-content: center;
 `;
+
+export const CloseModal = styled.TouchableOpacity`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+`;

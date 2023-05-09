@@ -37,10 +37,7 @@ export const SelectDayContainer = styled.View`
   gap: 8px;
 `;
 
-export const ServiceContainer = styled.View`
-  margin: 16px 24px;
-  gap: 8px;
-`;
+
 
 export const SelectHourContainer = styled.View`
   margin-top: 24px;
@@ -57,21 +54,11 @@ export const SelectHour = styled.TouchableOpacity`
   align-items: center;
 `;
 
-export const InfoContainer = styled.View`
-  flex-direction: row;
-  gap: 16px;
-`;
-
 
 export const Footer = styled.View`
   min-height: 110px;
 `;
 
-export const AddToCartButton = styled.TouchableOpacity`
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-`;
 
 export const FooterContainer = styled.SafeAreaView`
   margin: 24px;

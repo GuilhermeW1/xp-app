@@ -46,7 +46,7 @@ const CreateAccount: React.FC = () => {
         <SignInButton
           onPress={handleCreateAccount}
         >
-          <Text weight='600' size={24} opacity={0.7}>Criar Conta</Text>
+          <Text weight='600' size={16} color='#fff'>Criar Conta</Text>
         </SignInButton>
       </LoginFormContainer>
 

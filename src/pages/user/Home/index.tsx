@@ -1,19 +1,19 @@
 
 import { Text } from '../../../components/Text';
-import { Container, Header, Body, ServiceContainer, Footer, FooterContainer, InfoContainer, AddToCartButton, CancelOrder, SelectDay, SelectDayContainer, SelectHourContainer, SelectHour, ButtonContainer, ScheduleContainer, CenteredContainer } from './styles';
+import { Container, Header, Body, Footer, FooterContainer, CancelOrder, SelectDay, SelectDayContainer, SelectHourContainer, SelectHour, ButtonContainer, ScheduleContainer, CenteredContainer } from './styles';
 import { Service } from '../../../types/service';
 import { useEffect, useState } from 'react';
 import { CartItem } from '../../../types/CartItem';
 import { Cart } from '../../../components/cart';
 import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { FIREBASE_DB } from '../../../../firebaseConfig';
-import { ActivityIndicator, FlatList } from 'react-native';
-import { formatCurrency } from '../../../utils/formatCurrency';
+import { ActivityIndicator } from 'react-native';
 import {AntDesign} from '@expo/vector-icons';
 import { ScheduleModal } from '../../../components/schedule-modal';
 import { Button } from '../../../components/button';
 import { SelectHourModal } from '../../../components/select-hour-modal';
 import { useAuth } from '../../../context/auth-context';
+import { ServiceList } from '../../../components/services-list';
 
 export default function HomeUser(){
   const {user} = useAuth();
@@ -122,7 +122,9 @@ export default function HomeUser(){
     const dbService: Service[] = [];
     try{
       const querySnapshot = await getDocs(collection(FIREBASE_DB, 'Servicos'));
-
+      if(!querySnapshot){
+        return;
+      }
       querySnapshot.forEach((doc) => {
         const data = doc.data();
         const service = {
@@ -202,24 +204,7 @@ export default function HomeUser(){
               </CenteredContainer>
             )
               : (
-                <FlatList
-                  data={services}
-                  keyExtractor={item => item.id}
-                  renderItem={({item: service}) => (
-                    <ServiceContainer>
-                      <Text size={20} weight='600'>{service.name}</Text>
-                      <InfoContainer>
-                        <Text>{service.time} min</Text>
-                        <Text>{formatCurrency(service.price)}</Text>
-                      </InfoContainer>
-                      <AddToCartButton
-                        onPress={() => handleAddToCart(service)}
-                      >
-                        <AntDesign name="pluscircleo" size={24} color="red" />
-                      </AddToCartButton>
-                    </ServiceContainer>
-                  )}
-                />
+                <ServiceList services={services} addToCart={handleAddToCart}/>
               )}
         </Body>
       </Container>

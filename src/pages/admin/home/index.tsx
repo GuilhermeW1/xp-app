@@ -37,7 +37,8 @@ export interface HourInterface {
   }
 
 }
-
+//TODO: create some ref to recive te first input and compare the values of the stataes then disable the button if there is no change
+// and enable the button if is some change
 export function Home(){
   const init = {from: {hour: '00', minutes: '00'}, to: {hour: '00', minutes: '00'}};
   const [notWorkAtWeekends, setNotWorkAtWeekend] = useState(false);
@@ -48,6 +49,8 @@ export function Home(){
   const [rangeModalVisibility, setRangeModalVisibility] = useState<boolean>(false);
   const [rangeModalData, setRangeModalData] = useState('');
   const [error, setError] = useState('');
+
+
 
   function handelDisableWeekend(){
     const mark = {} as MarkedDates;

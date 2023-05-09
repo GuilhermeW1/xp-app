@@ -2,6 +2,7 @@ import {  Modal } from 'react-native';
 import { Container, ModalBody, Overlay } from './styles';
 import { Button } from '../button';
 import { Text } from '../Text';
+import { SecondaryButton } from '../secondary-button';
 
 export interface DeleteModal {
     visible: boolean;
@@ -26,11 +27,11 @@ export function DeleteModal({visible, onDelete, id , onClose}: DeleteModal){
           <Text weight='600' size={20} style={{alignSelf: 'center', marginVertical: 16}}>Tem certeza que deseja excluir?</Text>
           <Container>
 
-            <Button
+            <SecondaryButton
               onPress={handleDelete}
             >
               Ok
-            </Button>
+            </SecondaryButton>
             <Button
               onPress={onClose}
             >

@@ -3,23 +3,11 @@ import styled from 'styled-components/native';
 export const Container = styled.View`
   flex:1;
   background-color: #fdf1e3;
+  padding: 20px;
 `;
 
-export const CreateService = styled.TouchableOpacity`
-  margin: 16px 20px 0;
-  border-radius: 8px;
-  padding: 12px;
-  align-items: center;
-  justify-content: center;
-  background: #FF6000;
-`;
-
-export const SignOutButton = styled.TouchableOpacity`
-
-`;
 
 export const ServiceContainer = styled.View`
-  margin: 20px;
   /* border: 1px solid orange; */
   /* border-radius: 8px; */
   padding: 8px;
@@ -45,7 +33,6 @@ export const Separetor = styled.View`
   width:100%;
   height: 1px;
   background: orange;
-  margin: 0 24px;
 `;
 
 
