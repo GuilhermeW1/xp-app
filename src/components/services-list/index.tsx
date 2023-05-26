@@ -1,7 +1,7 @@
 import { FlatList } from 'react-native';
 import { Service } from '../../types/service';
 import { Text } from '../Text';
-import { AddToCartButton, InfoContainer, ServiceContainer } from './styles';
+import { AddToCartButton, InfoContainer, Separetor, ServiceContainer } from './styles';
 import {AntDesign} from '@expo/vector-icons';
 import { formatCurrency } from '../../utils/formatCurrency';
 
@@ -15,6 +15,8 @@ export function ServiceList({services, addToCart}: ServiceListProps){
     <FlatList
       data={services}
       keyExtractor={item => item.id}
+      ItemSeparatorComponent={Separetor}
+      style={{marginRight: 24}} //in styled components margin right was not working ??
       renderItem={({item: service}) => (
         <ServiceContainer>
           <Text size={20} weight='600'>{service.name}</Text>

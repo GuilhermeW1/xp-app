@@ -6,6 +6,7 @@ const isAndroid = Platform.OS === 'android';
 export const Container = styled.SafeAreaView`
   margin-top: ${isAndroid ? `${StatusBar.currentHeight}px` : '0px'};
   flex: 1;
+  background-color: #fdf1e3;
 `;
 
 
@@ -14,6 +15,7 @@ export const Header = styled.View`
   justify-content: space-between;
   align-items: center;
   margin: 24px 24px 0;
+
 `;
 
 export const CancelOrder = styled.TouchableOpacity``;
@@ -22,6 +24,11 @@ export const Body = styled.View`
   flex: 1;
 `;
 
+export const UserContainer = styled.TouchableOpacity`
+  flex: 1;
+  align-items: flex-end;
+  justify-content: center;
+`;
 
 export const SelectDay = styled.TouchableOpacity`
   border: 2px solid #FF6000;
@@ -46,7 +53,7 @@ export const SelectHourContainer = styled.View`
 `;
 
 export const SelectHour = styled.TouchableOpacity`
-  border: 2px solid #FF6000;
+  border: 2px solid ${({disabled}) => disabled ? '#666' : '#FF6000'};
   border-radius: 30px;
   padding: 8px 16px;
   flex-direction: row;
@@ -81,3 +88,38 @@ export const CenteredContainer = styled.View`
   justify-content: center;
   flex: 1;
 `;
+
+export const BackButton = styled.TouchableOpacity`
+`;
+
+export const Spacer = styled.View``;
+
+export const Menu = styled.View`
+  flex: 1;
+  margin: 16px 24px;
+  min-height: 30px;
+  max-height: 30px;
+  border-radius: 8px;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  gap: 16px;
+
+`;
+
+export const ServiceMenuItem = styled.TouchableOpacity`
+  background-color: #f1731f;
+  flex: 1;
+  border-radius: 48px;
+  padding: 6px 0;
+  align-items: center;
+`;
+
+export const ProductMenuItem = styled.TouchableOpacity`
+  background-color: #999;
+  flex: 1;
+  padding: 6px 0;
+  border-radius: 48px;
+  align-items: center;
+`;
+

@@ -5,7 +5,7 @@ import {AntDesign} from '@expo/vector-icons';
 import CustomCalendar from '../CustomCalendar';
 import { useEffect, useState } from 'react';
 import { MarkedDates } from 'react-native-calendars/src/types';
-import { getYearMontSring } from '../../utils/date';
+import { addDaysToToday, getToday, getYearMontSring } from '../../utils/date';
 import { doc, getDoc } from 'firebase/firestore';
 import { FIREBASE_DB } from '../../../firebaseConfig';
 
@@ -47,6 +47,7 @@ export function ScheduleModal({visible, onClose, handleSelectDay}: IScheduleModa
   return(
     <Modal
       visible={visible}
+      animationType='slide'
     >
       <Overlay>
         <ModalBody>
@@ -58,6 +59,8 @@ export function ScheduleModal({visible, onClose, handleSelectDay}: IScheduleModa
             <CustomCalendar
               handleSelectDay={({day}) => handleDayPress(day)}
               selected={selected}
+              minDays={getToday()}
+              maxDays={addDaysToToday(30)}
             />
           )}
         </ModalBody>

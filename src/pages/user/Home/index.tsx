@@ -1,20 +1,28 @@
 
 import { Text } from '../../../components/Text';
-import { Container, Header, Body, Footer, FooterContainer, CancelOrder, SelectDay, SelectDayContainer, SelectHourContainer, SelectHour, ButtonContainer, ScheduleContainer, CenteredContainer } from './styles';
+import { Container, Header, Body, Footer, FooterContainer, CancelOrder, SelectDay, SelectDayContainer, SelectHourContainer, SelectHour, ButtonContainer, ScheduleContainer, CenteredContainer, UserContainer, BackButton, Spacer, Menu, ServiceMenuItem, ProductMenuItem } from './styles';
 import { Service } from '../../../types/service';
 import { useEffect, useState } from 'react';
 import { CartItem } from '../../../types/CartItem';
 import { Cart } from '../../../components/cart';
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { FIREBASE_DB } from '../../../../firebaseConfig';
 import { ActivityIndicator } from 'react-native';
 import {AntDesign} from '@expo/vector-icons';
+import { EvilIcons } from '@expo/vector-icons';
 import { ScheduleModal } from '../../../components/schedule-modal';
 import { Button } from '../../../components/button';
-import { SelectHourModal } from '../../../components/select-hour-modal';
+import { AvaliableHoursInterface, SelectHourModal } from '../../../components/select-hour-modal';
 import { useAuth } from '../../../context/auth-context';
 import { ServiceList } from '../../../components/services-list';
+import { getDateWithSelectedDay, getYearMontSring } from '../../../utils/date';
+import { discountHour, getQuarterHourIntervals } from '../../../utils/hours';
+import { Link } from '@react-navigation/native';
+import { ConfirmModal } from '../../../components/confirm-modal';
 
+
+//TODO: give good names to this shit clean code is crying
+//TODO: i think i dont need the hour and minute stat that could be one object state
 export default function HomeUser(){
   const {user} = useAuth();
 
@@ -26,7 +34,10 @@ export default function HomeUser(){
   const [day, setDay] = useState<number | null>(null);
   const [hour, setHour] = useState('00');
   const [minutes, setMinutes] = useState('00');
-  const [isLoading ,setIsLoading] = useState(false);
+  const [isLoading ,setIsLoading] = useState<boolean>(false);
+  const [timeError, setTimeError] = useState<string>('');
+  const [scheduleLoading, setScheduleLoading] = useState<boolean>(false);
+  const [confirmModalVisible, setConfirmModalVisible] = useState<boolean>(false);
 
   function handleAddToCart(service: Service){
     if(cartItems.find(({item}) => item.id === service.id)) return;
@@ -38,6 +49,10 @@ export default function HomeUser(){
 
   function handleRemoveCartItem(item: CartItem){
     const newItems = cartItems.filter(cartItem => cartItem.item !== item.item);
+    //if the gay empty the cartItems the order is canceled
+    if(newItems.length == 0){
+      handleCancelOrder();
+    }
     setCartItems(newItems);
   }
 
@@ -48,6 +63,10 @@ export default function HomeUser(){
   function handleCancelOrder(){
     setCartItems([]);
     setSchedule(false);
+    setTimeError('');
+    setMinutes('');
+    setHour('');
+    setDay(null);
   }
 
   function handleOpenCalendarModal(){
@@ -58,31 +77,63 @@ export default function HomeUser(){
     setCalendarModalVisibility(false);
   }
 
-  function handleSelectDay(day: number){
-    setDay(day);
+  //were the day is selected i create a new document with the yyyy-month-day
+  //in firebase and store the hours range defined by the adm in pages/admin/home/index
+  async function handleSelectDay(day: number){
+    const documentId = getDateWithSelectedDay(day);
+    const docRef = doc(FIREBASE_DB, 'DiaHora', documentId);
+    try{
+      const dataSnap = await getDoc(docRef);
+      if(dataSnap.exists()){
+        setDay(day);
+        return;
+      }else{
+
+        const yearMonth = getYearMontSring();
+        const dockRefAtnd = doc(FIREBASE_DB, 'Atendimento', yearMonth);
+        const dataSnap = await getDoc(dockRefAtnd);
+        const data = dataSnap.data();
+        const morningHours = data?.morningHour;
+        const afternoonHours = data?.afternoonHour;
+
+        const strMorning = `${morningHours.from.hour}:${morningHours.from.minutes} - ${morningHours.to.hour}:${morningHours.to.minutes}`;
+
+        const strAfternoon = `${afternoonHours.from.hour}:${afternoonHours.from.minutes} - ${afternoonHours.to.hour}:${afternoonHours.to.minutes}`;
+
+        const morning = getQuarterHourIntervals(strMorning);
+        const afternoon = getQuarterHourIntervals(strAfternoon);
+
+        const hrs = [...morning, ...afternoon];
+
+        await setDoc(docRef, {
+          horas: hrs,
+        });
+        setDay(day);
+      }
+
+    }catch(error){
+      throw new Error('error');
+    }
+
   }
 
   function handleCloseHourModal(){
     setSelectHourModalVisibility(false);
   }
 
-  function handleSetMinutes(min: string){
+  function handleSetTime({hour, min}: AvaliableHoursInterface){
+    setHour(hour);
     setMinutes(min);
   }
 
-  function handleSetHours(hr: string){
-    setHour(hr);
-  }
-
-
   async function handleAddHorario(){
+    setScheduleLoading(true);
+    setTimeError('');
     if(!day || !hour || !minutes || cartItems.length == 0){
       return;
     }
-    const newDate = new Date(Date.now());
-    const year = newDate.getFullYear();
-    const month = newDate.getMonth();
-    const date = new Date(year, month, day,  parseInt(hour), parseInt(minutes));
+
+
     const {totalTime, totalPrice} = cartItems.reduce((acc, item) => {
       return {
         totalTime: acc.totalTime + item.item.time,
@@ -90,8 +141,37 @@ export default function HomeUser(){
       };
     }, {totalTime: 0, totalPrice:0});
 
+    //get the available hours and verify if the selected time is available
+    const documentId = getDateWithSelectedDay(day);
+    const hoursDatabaseRef = doc(FIREBASE_DB, 'DiaHora', documentId);
+    let updatedHours: string [] = [];
+    try{
+      const dataSnap = await getDoc(hoursDatabaseRef);
+
+      const data = dataSnap.data();
+      const newHours = discountHour(data?.horas, totalTime, `${hour}:${minutes}`);
+
+      if(newHours === -1 || typeof newHours === 'number'){
+        setTimeError('Horario nao disponivel');
+        setScheduleLoading(false);
+        return;
+      }else{
+        updatedHours = [...newHours];
+      }
+
+    }catch(error){
+      setScheduleLoading(false);
+      throw new Error();
+    }
+
+    //make the new schedule
+    const newDate = new Date(Date.now());
+    const year = newDate.getFullYear();
+    const month = newDate.getMonth();
+    const date = new Date(year, month, day,  parseInt(hour), parseInt(minutes));
+
     const schedule = {
-      services: cartItems.map(item => item.item.id),
+      services: cartItems.map(item => item.item),
       time: totalTime,
       price: totalPrice,
       date: date,
@@ -99,12 +179,17 @@ export default function HomeUser(){
     };
 
     try{
+      //TODO: make a transaction to handle the 2 things
       await addDoc(collection(FIREBASE_DB, 'Agendamento'), schedule);
+      await setDoc(hoursDatabaseRef, {horas: updatedHours});
+
+      setConfirmModalVisible(true);
       setCartItems([]);
       setDay(null);
       setHour('');
       setMinutes('');
       setSchedule(false);
+      setScheduleLoading(false);
     }
     catch(error){
       setCartItems([]);
@@ -112,6 +197,7 @@ export default function HomeUser(){
       setHour('');
       setMinutes('');
       setSchedule(false);
+      setScheduleLoading(false);
       throw new Error();
     }
 
@@ -142,8 +228,6 @@ export default function HomeUser(){
     setIsLoading(false);
   };
 
-
-
   useEffect(() => {
     getServices();
   },[]);
@@ -156,16 +240,40 @@ export default function HomeUser(){
             <Text size={24} weight='600' color='#666'>Confirme e agende seu horario</Text>
           ) : (
             <>
-              <Text weight='700' size={24} color='#666'>Bem Vindo</Text>
-              {cartItems.length > 0 && (
+              {cartItems.length == 0 ? (
+                <BackButton>
+                  <Link to={{screen: 'User'}}>
+                    <Text weight='700' size={24} color='#666'><AntDesign name="arrowleft" size={24} color="black" /></Text>
+
+                  </Link>
+                </BackButton>
+
+              ) : <Spacer/>}
+              {cartItems.length > 0 ? (
                 <CancelOrder onPress={handleCancelOrder}>
                   <Text color='red'>Cancelar pedido</Text>
                 </CancelOrder>
+              ) : (
+                <UserContainer>
+                  <Link to={{screen: 'User'}}>
+                    <Text size={16}>{user?.email} <EvilIcons name="user" size={24} color="black" /></Text>
+                  </Link>
+                </UserContainer>
               )}
             </>
           )}
         </Header>
         <Body>
+          {!schedule && (
+            <Menu>
+              <ServiceMenuItem>
+                <Text color='#fff'>Servicos</Text>
+              </ServiceMenuItem>
+              <ProductMenuItem>
+                <Text color='#fff'>Produtos</Text>
+              </ProductMenuItem>
+            </Menu>
+          )}
           {schedule ? (
             <ScheduleContainer>
               <SelectDayContainer>
@@ -179,6 +287,7 @@ export default function HomeUser(){
               </SelectDayContainer>
               <SelectHourContainer>
                 <SelectHour
+                  disabled={!day}
                   onPress={() => setSelectHourModalVisibility(true)}
                 >
                   <Text>Selecione um Horario</Text>
@@ -187,10 +296,11 @@ export default function HomeUser(){
                 {hour || minutes ? (
                   <Text>{hour} : {minutes}</Text>
                 ) : ( <Text>Nenhum horario selecionado</Text>)}
+                {timeError && (<Text color='red'>Horario indisponivel</Text>)}
               </SelectHourContainer>
               <ButtonContainer>
                 <Button
-                  disabled={day == null || hour == '00'}
+                  disabled={day == null || hour == '00' || scheduleLoading}
                   onPress={handleAddHorario}>
                 Agendar Horario
                 </Button>
@@ -227,47 +337,13 @@ export default function HomeUser(){
       <SelectHourModal
         visible={selectHourModalVisibility}
         onClose={handleCloseHourModal}
-        setMinutesModal={handleSetMinutes}
-        setHoursModal={handleSetHours}
+        setTime={handleSetTime}
+        day={day}
+      />
+      <ConfirmModal
+        visible={confirmModalVisible}
+        onClose={() => setConfirmModalVisible(false)}
       />
     </>
   );
 }
-
-
-// const [selected, setSelected] = useState<MarkedDates>({} as MarkedDates);
-
-//   useEffect(()=> {
-//     const mes = getYearMontSring();
-//     console.log(mes);
-//     const dockRef = doc(FIREBASE_DB, 'Atendimento', mes);
-//     const getData = async () => {
-//       const dataSnap = await getDoc(dockRef);
-//       const dates = dataSnap.data();
-//       const mark = {} as MarkedDates;
-//       dates?.days.map((day: string) => (
-//         mark[day] = {selected: true, selectedColor: 'red', disabled: true}
-//       ));
-//       setSelected(mark);
-//     };
-
-//     getData();
-//   }, []);
-
-
-
-//   function getToday(){
-//     const today = new Date(Date.now());
-//     const [date] = today.toISOString().split('T');
-//     return date;
-//   }
-
-//   return(
-//     <Calendar
-//       markedDates={selected}
-//       onDayPress={({day}) => alert(day)}
-//       disableArrowLeft
-//       minDate={getToday()}
-//       disableAllTouchEventsForDisabledDays
-//     />
-//   );

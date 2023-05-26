@@ -9,11 +9,11 @@ import { Ionicons } from '@expo/vector-icons';
 
 
 const SignIn: React.FC = () => {
-  const [email, setEmail] = useState<string>('teste123@gmail.com');
-  const [password, setPassword] = useState<string>('12345678');
+  const [email, setEmail] = useState<string>('gui.a.weiss@hotmail.com');//gui.a.weiss@hotmail.com//teste123@gmail.com
+  const [password, setPassword] = useState<string>('weiss1234');//weiss1234//12345678
   const [isLoading, setIsLoading] = useState(false);
   const [invalidCredentials, setInvalidCredentials] = useState<null | boolean>(null);
-  const [passwordVisibility, setPaswordVisibility] = useState<boolean>(true);
+  const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true);
 
   const {signInWithEmailAndPassword} = useAuth();
 
@@ -59,7 +59,7 @@ const SignIn: React.FC = () => {
             onChangeText={setPassword}
           />
           <ToggleVisible
-            onPress={() => setPaswordVisibility(!passwordVisibility)}
+            onPress={() => setPasswordVisibility(!passwordVisibility)}
           >
             <Text>
               {passwordVisibility ? <Ionicons name="eye-off-outline" size={24} color="orange" /> :

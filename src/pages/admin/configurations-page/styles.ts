@@ -1,7 +1,12 @@
 import styled from 'styled-components/native';
+import { Platform, StatusBar } from 'react-native';
 
-export const Container = styled.View`
+const isAndroid = Platform.OS === 'android';
+
+
+export const Container = styled.SafeAreaView`
   display: flex;
+  margin-top: ${isAndroid ? `${StatusBar.currentHeight}px` : '0px'};
   flex: 1;
   flex-direction: column;
   background-color: #fdf1e3;

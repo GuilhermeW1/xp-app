@@ -6,6 +6,7 @@ import { formatCurrency } from '../../utils/formatCurrency';
 import { Button } from '../button';
 import { AntDesign } from '@expo/vector-icons';
 import { SecondaryButton } from '../secondary-button';
+import { formatTime } from '../../utils/formatTime';
 
 interface CartProps {
   cartItems: CartItem[];
@@ -24,20 +25,6 @@ export function Cart({cartItems, handleRemoveCartItem, handleSchedule, schedule,
       totalPrice: acc.totalPrice + item.item.price,
     };
   }, {totalTime: 0, totalPrice:0});
-
-  function formatTime(time: number): string{
-    if(time <=59 ){
-      return `${time} min`;
-    }
-
-    const horas = Math.floor(time/ 60);
-    const min = time % 60;
-    const textoHoras = (`00${horas}`).slice(-2);
-    const textoMinutos = (`00${min}`).slice(-2);
-
-    return `${textoHoras }:${textoMinutos} hora(s)`;
-
-  }
 
   return(
     <>

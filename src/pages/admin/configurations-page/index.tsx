@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 import { Text } from '../../../components/Text';
@@ -16,7 +16,6 @@ import {
   Container,
   MorningContainer,
   OptionsContaier,
-  SendConfigurations,
   ServiceContainer,
   ServiceHourSelection } from './styles';
 import {AntDesign} from '@expo/vector-icons';
@@ -37,9 +36,11 @@ export interface HourInterface {
   }
 
 }
-//TODO: create some ref to recive te first input and compare the values of the stataes then disable the button if there is no change
+//TODO: bug in blocked days in calendar the date push 2 dias before 9 pm i think this is the gmt - fu
+//TODO: create some ref to receive te first input and compare the values of the states then disable the button if there is no change
+//TODO: use useDispatch to handle all the fields in the same state
 // and enable the button if is some change
-export function Home(){
+export function ConfigurationsPage(){
   const init = {from: {hour: '00', minutes: '00'}, to: {hour: '00', minutes: '00'}};
   const [notWorkAtWeekends, setNotWorkAtWeekend] = useState(false);
   const [selected, setSelected] = useState<MarkedDates>({});
@@ -76,7 +77,6 @@ export function Home(){
     }
     setSelected({...selected, ...mark});
   }
-
   function handleEnableWeekend(){
     const mark = {} as MarkedDates;
 
@@ -183,17 +183,17 @@ export function Home(){
     const dockRef = doc(FIREBASE_DB, 'Atendimento', mes);
     const getData = async () => {
       const dataSnap = await getDoc(dockRef);
-      const dates = dataSnap.data();
-      if(!dates){
+      const data = dataSnap.data();
+      if(!data){
         return;
       }
       const mark = {} as MarkedDates;
-      dates?.days.map((day: string) => (
+      data?.days.map((day: string) => (
         mark[day] = {selected: true, selectedColor: 'red'}
       ));
 
-      setAfternoonHour(dates?.afternoonHour);
-      setMorningHour(dates?.morningHour);
+      setAfternoonHour(data?.afternoonHour);
+      setMorningHour(data?.morningHour);
       setSelected(mark);
     };
 
@@ -265,30 +265,3 @@ export function Home(){
     </Container>
   );
 }
-
-const styles = StyleSheet.create({
-  picker: {
-    width: 100,
-  },
-  separator: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginHorizontal: 5,
-  },
-});
-
-
-// <HorarioContainer>
-// <Text>Horario de atendimento</Text>
-// <HorarioBox>
-//   <Text weight='600'>Hora Inicio</Text>
-//   <HoraStart
-
-//   />
-// </HorarioBox>
-// <HorarioBox>
-//   <Text weight='600'>Hora fim</Text>
-//   <HoraStart
-//   />
-// </HorarioBox>
-// </HorarioContainer>

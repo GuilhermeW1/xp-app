@@ -13,7 +13,7 @@ export function SecondaryButton({children, onPress, disabled}: ButtonProps){
       disabled={disabled}
       onPress={onPress}
     >
-      <Text weight='600' color='#666'>{children}</Text>
+      <Text weight='600' color='#666' style={{alignSelf: 'center'}}>{children}</Text>
     </Container>
   );
 }

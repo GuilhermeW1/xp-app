@@ -1,6 +1,5 @@
 import { Calendar,LocaleConfig } from 'react-native-calendars';
 import type { DateData, MarkedDates } from 'react-native-calendars/src/types';
-import { useState } from 'react';
 
 LocaleConfig.locales['br'] = {
   monthNames: [
@@ -27,10 +26,11 @@ LocaleConfig.defaultLocale = 'br';
 interface CustomCalendarProps {
   selected: MarkedDates;
   handleSelectDay: (date: DateData) => void;
+  minDays?: string;
+  maxDays?: string;
 }
 
-export default function CustomCalendar({selected, handleSelectDay}: CustomCalendarProps){
-
+export default function CustomCalendar({selected, handleSelectDay, minDays, maxDays}: CustomCalendarProps){
   // function handelDisableWeekend(){
   //   const mark = {} as MarkedDates;
 
@@ -67,17 +67,17 @@ export default function CustomCalendar({selected, handleSelectDay}: CustomCalend
   //   return dateFormat;
   // }
 
-  function format(date: string){
-    let d: string;
-    let m: string;
-    const [year, month, day] = date.split('-');
+  // function format(date: string){
+  //   let d: string;
+  //   let m: string;
+  //   const [year, month, day] = date.split('-');
 
-    // eslint-disable-next-line prefer-const
-    m = month.length != 2 ? '0' + month : month;
-    // eslint-disable-next-line prefer-const
-    d = day.length != 2 ? '0' + day : day;
-    return `${year}-${m}-${d}`;
-  }
+  //   // eslint-disable-next-line prefer-const
+  //   m = month.length != 2 ? '0' + month : month;
+  //   // eslint-disable-next-line prefer-const
+  //   d = day.length != 2 ? '0' + day : day;
+  //   return `${year}-${m}-${d}`;
+  // }
 
   // function maxDaysFunction(){
   //   const date = new Date(Date.now());
@@ -134,6 +134,8 @@ export default function CustomCalendar({selected, handleSelectDay}: CustomCalend
       disableAllTouchEventsForDisabledDays
       disabledDaysIndexes={[0,6]}
       onDayPress={(date) => handleSelectDay(date)}
+      minDate={minDays}
+      maxDate={maxDays}
     />
   );
 }

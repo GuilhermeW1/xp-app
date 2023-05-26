@@ -72,3 +72,24 @@ export const ModalOptionsSave = styled.View`
   justify-content: space-around;
 `;
 
+export const ImagePickerContainer = styled.View`
+  min-height: 100px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const Image = styled.Image`
+  height: 98px;
+  width: 126px;
+  border-radius: 8px;
+`;
+
+export const SelectImageButton = styled.TouchableOpacity`
+  align-items: center;
+
+`;
+
+export const Separetor = styled.View`
+
+`;

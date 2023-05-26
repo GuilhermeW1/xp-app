@@ -5,7 +5,7 @@ import { CloseModal, Container, ModalBody, Overlay } from './styles';
 import { useState } from 'react';
 import { Button } from '../button';
 
-import type { HourInterface } from '../../pages/admin/home';
+import type { HourInterface } from '../../pages/admin/configurations-page';
 
 import {AntDesign} from '@expo/vector-icons';
 

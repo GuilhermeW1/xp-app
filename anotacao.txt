@@ -1,0 +1,49 @@
+function subtractTimeFromHorarios(horarios, timeToSubtract) {
+  const interval = 15; // Intervalo de 15 minutos
+  const timeToSubtractInMinutes = timeToSubtract.split(':').reduce((acc, curr) => 60 * acc + +curr, 0);
+  const firstHorarioInMinutes = horarios[0].split(':').reduce((acc, curr) => 60 * acc + +curr, 0) - timeToSubtractInMinutes;
+
+  let nextHorarioInMinutes = Math.ceil(firstHorarioInMinutes / (interval * 60)) * (interval * 60);
+  let result = [];
+
+  for (let i = nextHorarioInMinutes; i <= 1440; i += interval * 60) {
+    const hours = Math.floor(i / 60);
+    const minutes = i % 60;
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    result.push(`${formattedHours}:${formattedMinutes}`);
+  }
+
+  return result;
+}
+
+
+function subtractTimeFromHorarios(horarios, timeToSubtract, horarioToRemove) {
+  const interval = 15; // Intervalo de 15 minutos
+  const timeToSubtractInMinutes = timeToSubtract.split(':').reduce((acc, curr) => 60 * acc + +curr, 0);
+  const horarioToRemoveInMinutes = horarioToRemove.split(':').reduce((acc, curr) => 60 * acc + +curr, 0);
+
+  const indexToRemove = horarios.findIndex(horario => horario === horarioToRemove);
+  if (indexToRemove === -1) {
+    // O horário a ser removido não foi encontrado no array original.
+    return horarios;
+  }
+
+  let previousHorarioInMinutes = horarios[indexToRemove - 1].split(':').reduce((acc, curr) => 60 * acc + +curr, 0) - timeToSubtractInMinutes;
+
+  let nextHorarioInMinutes = Math.ceil(previousHorarioInMinutes / (interval * 60)) * (interval * 60);
+  let newHorarios = [];
+
+  for (let i = nextHorarioInMinutes; i <= 1440; i += interval * 60) {
+    const hours = Math.floor(i / 60);
+    const minutes = i % 60;
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    newHorarios.push(`${formattedHours}:${formattedMinutes}`);
+  }
+
+  horarios.splice(indexToRemove, 1);
+  horarios.splice(indexToRemove, 0, ...newHorarios);
+
+  return horarios;
+}

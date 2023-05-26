@@ -1,10 +1,6 @@
-import { useState } from 'react';
-import { UserCredential } from 'firebase/auth';
+import { useCallback, useState } from 'react';
 import { createContext, useContext } from 'react';
 import { createUser, isAdmin, signIn } from '../services/auth';
-import { FIREBASE_DB } from '../../firebaseConfig';
-// import { ref, onValue } from 'firebase/database';
-// import { FIREBASE_DB } from '../../firebaseConfig';
 
 interface AuthContextProviderType {
   children: React.ReactNode;
@@ -29,7 +25,7 @@ const AuthContext = createContext({} as AuthContextType);
 export function AuthContextProvider({children}: AuthContextProviderType) {
   const [user, setUser] = useState<UserType | null>(null);
 
-  const signInWithEmailAndPassword = async(email: string, password: string) => {
+  const signInWithEmailAndPassword = useCallback( async(email: string, password: string) => {
     const {user} = await signIn({email, password});
 
     const userAdmin = await isAdmin(user.uid);
@@ -40,9 +36,9 @@ export function AuthContextProvider({children}: AuthContextProviderType) {
       emailVerified: user.emailVerified,
       isAdmin: userAdmin,
     });
-  };
+  }, []);
 
-  const createNewUser = async(email: string, password: string) => {
+  const createNewUser = useCallback(async(email: string, password: string) => {
     const {user} = await createUser({email, password});
 
     setUser({
@@ -51,12 +47,9 @@ export function AuthContextProvider({children}: AuthContextProviderType) {
       emailVerified: user.emailVerified,
       isAdmin: false
     });
+  }, []);
 
-  };
-
-  function signOut (){
-    setUser(null);
-  }
+  const signOut = useCallback(() => {setUser(null);},[]);
 
   return(
     <AuthContext.Provider value={{signInWithEmailAndPassword, user, createNewUser, signOut}}>
