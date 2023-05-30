@@ -49,6 +49,7 @@ const SignIn: React.FC = () => {
           placeholder='e-mail'
           value={email}
           onChangeText={setEmail}
+          keyboardType='email-address'
         />
         <PasswordContainer>
 

@@ -7,6 +7,7 @@ import { CenteredContainer, Container, DeleteService, EditContainer, EditService
 import { AntDesign } from '@expo/vector-icons';
 import { formatCurrency } from '../../../utils/formatCurrency';
 import { CreateServiceModal } from '../../../components/create-service-modal';
+import * as ImagePicker from 'expo-image-picker';
 
 import type { Service } from '../../../types/service';
 import { DeleteModal } from '../../../components/delete-modal';
@@ -29,6 +30,9 @@ export function ServicesPage(){
   const [service, setService] = useState<null | IService>(null);
   const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
   const [deleteId, setDeleteId] = useState<string>('');
+
+  const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
+
 
   const handleCloseModal = useCallback(() => {
     setService(null);
@@ -129,10 +133,19 @@ export function ServicesPage(){
     }
 
     //it means that the service that i send to de modal have changed the image
-    let path;
-    if(service.imageUrl !== imageUrl){
+    let path = service.imagePath;
+    if(service.imageUrl !== imageUrl && imageUrl){
       const date = Date.now();
       path = `images/${date}`;
+
+      const oldImage = service.imagePath;
+      if(oldImage){
+        await deleteObject(ref(FIREBASE_STORAGE, oldImage));
+      }
+
+      const image = await fetch(imageUrl);
+      const blob = await image.blob();
+      await uploadBytes(ref(FIREBASE_STORAGE, path), blob);
     }
 
     const ser = {
@@ -151,7 +164,7 @@ export function ServicesPage(){
             name,
             price,
             time,
-            imagePath: imageUrl ?? null,
+            imagePath: path ?? null,
             imageUrl: imageUrl ?? null,
           };
         }
@@ -205,7 +218,11 @@ export function ServicesPage(){
         throw new Error('erro ao buscar servicos');
       }
     })();
-  },[]);
+
+    if(status?.status !== 'granted'){
+      (async () => await requestPermission())();
+    }
+  },[status, requestPermission]);
 
   return (
     <Container>
@@ -215,7 +232,13 @@ export function ServicesPage(){
           <CenteredContainer>
             <ActivityIndicator size='large'  />
           </CenteredContainer>
-        ) : (
+        ) : ( services.length === 0 ? (
+          <CenteredContainer>
+            <Text size={24} weight='600' color='#666'>Nenhum serviço</Text>
+            <Text size={24} weight='600' color='#666' style={{marginVertical: 8}}>Adicione serviços</Text>
+            <Text size={24} weight='600' color='#666'> no botão abaixo</Text>
+          </CenteredContainer>
+        ) :
           <FlatList
             data={services}
             keyExtractor={(service) => service.id}
@@ -246,7 +269,6 @@ export function ServicesPage(){
             )}
           />
         )}
-
 
       <Button
         onPress={handleOpenModal}

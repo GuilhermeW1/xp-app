@@ -1,12 +1,12 @@
 
 import { Text } from '../../../components/Text';
-import { Container, Header, Body, Footer, FooterContainer, CancelOrder, SelectDay, SelectDayContainer, SelectHourContainer, SelectHour, ButtonContainer, ScheduleContainer, CenteredContainer, UserContainer, BackButton, Spacer, Menu, ServiceMenuItem, ProductMenuItem } from './styles';
-import { Service } from '../../../types/service';
+import { Container, Header, Body, Footer, FooterContainer, CancelOrder, SelectDay, SelectDayContainer, SelectHourContainer, SelectHour, ButtonContainer, ScheduleContainer, CenteredContainer, UserContainer, BackButton, Spacer, Menu, MenuItem } from './styles';
+import { UserService } from '../../../types/service';
 import { useEffect, useState } from 'react';
 import { CartItem } from '../../../types/CartItem';
 import { Cart } from '../../../components/cart';
 import { addDoc, collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
-import { FIREBASE_DB } from '../../../../firebaseConfig';
+import { FIREBASE_DB, FIREBASE_STORAGE } from '../../../../firebaseConfig';
 import { ActivityIndicator } from 'react-native';
 import {AntDesign} from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
@@ -19,14 +19,22 @@ import { getDateWithSelectedDay, getYearMontSring } from '../../../utils/date';
 import { discountHour, getQuarterHourIntervals } from '../../../utils/hours';
 import { Link } from '@react-navigation/native';
 import { ConfirmModal } from '../../../components/confirm-modal';
+import { getDownloadURL, ref } from 'firebase/storage';
+import { UserProduct } from '../../../types/Product';
+import { ProductList } from '../../../components/products-list copy';
 
+//
+//NOTE: the app is based on cartItems where service have a defined time and product dont have
+// thats the way tath i could think to solve the problem quickly
+//
 
 //TODO: give good names to this shit clean code is crying
 //TODO: i think i dont need the hour and minute stat that could be one object state
 export default function HomeUser(){
   const {user} = useAuth();
 
-  const [services, setServices] = useState<Service[]>([]);
+  const [services, setServices] = useState<UserService[]>([]);
+  const [products, setProducts] = useState<UserProduct[]>([]);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [schedule, setSchedule] = useState<boolean>(false);
   const [calendarModalVisibility, setCalendarModalVisibility] = useState<boolean>(false);
@@ -38,22 +46,60 @@ export default function HomeUser(){
   const [timeError, setTimeError] = useState<string>('');
   const [scheduleLoading, setScheduleLoading] = useState<boolean>(false);
   const [confirmModalVisible, setConfirmModalVisible] = useState<boolean>(false);
+  const [selectedMenuItem, setSelectedMenuItem] = useState(1);
 
-  function handleAddToCart(service: Service){
-    if(cartItems.find(({item}) => item.id === service.id)) return;
+  function handleAddToCart(service: UserService | UserProduct){
+    return setCartItems((prevState) => {
+      const itemIndex = prevState.findIndex(cartItem => cartItem.item.id === service.id);
 
-    const item: CartItem = {item: service};
-    setCartItems(items => [...items, item]);
-    return;
+      if(itemIndex < 0){
+        return prevState.concat({
+          quantity: 1,
+          item: service,
+        });
+      }
+
+      const newCartItems = [...prevState];
+      const item = newCartItems[itemIndex];
+
+      if(item.quantity && !service.time){
+        newCartItems[itemIndex] = {
+          ...newCartItems[itemIndex],
+          quantity: item.quantity +1
+        };
+
+        return newCartItems;
+      }
+
+      return prevState;
+    });
   }
-
   function handleRemoveCartItem(item: CartItem){
-    const newItems = cartItems.filter(cartItem => cartItem.item !== item.item);
-    //if the gay empty the cartItems the order is canceled
-    if(newItems.length == 0){
+    const itemIndex = cartItems.findIndex(cartItem => cartItem.item.id == item.item.id);
+
+    if(itemIndex < 0){
       handleCancelOrder();
+      return setCartItems([]);
     }
-    setCartItems(newItems);
+
+    const newItems = [...cartItems];
+    const selectedItem = newItems[itemIndex];
+
+    if(!selectedItem.item.time){
+      if(selectedItem.quantity === 1){
+        return setCartItems(prev => prev.filter(cartItem => cartItem.item.id !== item.item.id));
+      }
+
+      if(selectedItem.quantity){
+        newItems[itemIndex] = {
+          ...newItems[itemIndex],
+          quantity: selectedItem.quantity -1,
+        };
+
+        return setCartItems(newItems);
+      }
+    }
+    return setCartItems(prev => prev.filter(cartItem => cartItem.item.id !== item.item.id));
   }
 
   function handleSchedule(){
@@ -135,11 +181,18 @@ export default function HomeUser(){
 
 
     const {totalTime, totalPrice} = cartItems.reduce((acc, item) => {
+      if(!item.item.time){
+        return {
+          totalTime: acc.totalTime,
+          totalPrice: acc.totalPrice + item.item.price,
+        };
+      }
       return {
         totalTime: acc.totalTime + item.item.time,
         totalPrice: acc.totalPrice + item.item.price,
       };
     }, {totalTime: 0, totalPrice:0});
+
 
     //get the available hours and verify if the selected time is available
     const documentId = getDateWithSelectedDay(day);
@@ -203,35 +256,90 @@ export default function HomeUser(){
 
   }
 
-  const getServices = async() => {
+  async function loadServices(){
     setIsLoading(true);
-    const dbService: Service[] = [];
     try{
       const querySnapshot = await getDocs(collection(FIREBASE_DB, 'Servicos'));
-      if(!querySnapshot){
-        return;
-      }
-      querySnapshot.forEach((doc) => {
+
+      const servicesPromises = querySnapshot.docs.map(async (doc) => {
         const data = doc.data();
-        const service = {
-          id: doc.id,
-          name: data.nome,
-          price: data.valor,
-          time: data.tempo
-        };
-        dbService.push(service);
+        const imagePath = data.imagePath ?? null;
+        let url;
+        if(imagePath){
+          const imageRef = ref(FIREBASE_STORAGE, imagePath);
+          try{
+            url = await getDownloadURL(imageRef);
+          }catch(error){
+            console.log(error);
+            throw new Error('erro ao buscar imagePath do servico');
+          }
+        }
+        const userService: UserService =
+          {
+            id: doc.id,
+            name: data.nome,
+            price: data.valor,
+            time : data.tempo,
+            imageUrl: url ?? null
+          };
+        return userService;
       });
+      const services = await Promise.all(servicesPromises);
+      setServices(services);
+      setIsLoading(false);
     }catch(error){
-      throw new Error();
+      setIsLoading(false);
+      throw new Error('erro ao buscar servicos');
     }
-    setServices(dbService);
-    setIsLoading(false);
-  };
+  }
 
+  async function loadProducts(){
+    setIsLoading(true);
+    try{
+      const querySnapshot = await getDocs(collection(FIREBASE_DB, 'Produtos'));
+
+      const servicesPromises = querySnapshot.docs.map(async (doc) => {
+        const data = doc.data();
+        const imagePath = data.imagePath ?? null;
+        let url;
+        if(imagePath){
+          const imageRef = ref(FIREBASE_STORAGE, imagePath);
+          try{
+            url = await getDownloadURL(imageRef);
+          }catch(error){
+            console.log(error);
+            throw new Error('erro ao buscar imagePath do servico');
+          }
+        }
+        const userService: UserProduct =
+          {
+            id: doc.id,
+            name: data.nome,
+            price: data.valor,
+            description : data.descricao,
+            imageUrl: url ?? ''
+          };
+        return userService;
+      });
+      const products = await Promise.all(servicesPromises);
+      setProducts(products);
+      setIsLoading(false);
+    }catch(error){
+      setIsLoading(false);
+      throw new Error('erro ao buscar servicos');
+    }
+  }
   useEffect(() => {
-    getServices();
-  },[]);
+    (async() => {
+      if(selectedMenuItem === 1){
+        await loadServices();
+      }else{
+        await loadProducts();
+      }
 
+    })();
+    // getServices();
+  },[selectedMenuItem]);
   return(
     <>
       <Container>
@@ -266,12 +374,18 @@ export default function HomeUser(){
         <Body>
           {!schedule && (
             <Menu>
-              <ServiceMenuItem>
+              <MenuItem
+                style={selectedMenuItem == 1 ? {backgroundColor: '#f1731f'} : {opacity: 0.5}}
+                onPress={() => setSelectedMenuItem(1)}
+              >
                 <Text color='#fff'>Servicos</Text>
-              </ServiceMenuItem>
-              <ProductMenuItem>
+              </MenuItem >
+              <MenuItem
+                style={selectedMenuItem == 2 ? {backgroundColor: '#f1731f'} : {opacity: 0.5}}
+                onPress={() => setSelectedMenuItem(2)}
+              >
                 <Text color='#fff'>Produtos</Text>
-              </ProductMenuItem>
+              </MenuItem>
             </Menu>
           )}
           {schedule ? (
@@ -313,9 +427,11 @@ export default function HomeUser(){
                 <ActivityIndicator color='#FF6000' size='large'/>
               </CenteredContainer>
             )
-              : (
+              : selectedMenuItem == 1 ?
                 <ServiceList services={services} addToCart={handleAddToCart}/>
-              )}
+                :
+                <ProductList products={products} addToCart={handleAddToCart}/>
+          }
         </Body>
       </Container>
       <Footer>

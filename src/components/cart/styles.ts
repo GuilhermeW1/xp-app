@@ -9,15 +9,24 @@ export const Item = styled.View`
 
 export const ServiceInfo = styled.View`
   gap: 8px;
+  flex-direction: row;
 `;
 
 export const InfoContainer = styled.View`
   gap: 8px;
-  flex-direction: row;
 `;
 
 export const Actions = styled.TouchableOpacity`
+`;
 
+export const Info = styled.View`
+  flex-direction: row;
+  gap: 8px;
+`;
+
+export const QuantityCoitaner = styled.View`
+  min-width: 15px;
+  margin-left: 12px;
 `;
 
 export const Summary = styled.View`
@@ -29,4 +38,10 @@ export const Summary = styled.View`
 export const SummaryInfo = styled.View`
   margin-right: 32px;
   flex: 1;
+`;
+
+export const Image = styled.Image`
+  width: 48px;
+  height: 40px;
+  border-radius: 8px;
 `;

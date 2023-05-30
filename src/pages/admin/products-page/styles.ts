@@ -5,25 +5,24 @@ const isAndroid = Platform.OS === 'android';
 
 export const Container = styled.SafeAreaView`
   margin-top: ${isAndroid ? `${StatusBar.currentHeight}px` : '0px'};
-  flex: 1;
-  padding: 20px;
+  flex:1;
   background-color: #fdf1e3;
+  padding: 24px;
 `;
 
+
 export const ServiceContainer = styled.View`
-  /* border: 1px solid orange; */
-  /* border-radius: 8px; */
-  padding: 8px;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
   height: 96px;
 `;
 
 export const InfoContainer = styled.View`
   flex: 1;
-  gap: 8px;
+  margin-left: 16px;
+  justify-content: space-around;
 `;
+
+export const InfoSeparetor = styled.View``;
 
 export const EditContainer = styled.View`
   align-items: flex-end;
@@ -36,8 +35,8 @@ export const Separetor = styled.View`
   width:100%;
   height: 1px;
   background: orange;
+  margin: 16px 0;
 `;
-
 
 export const EditService = styled.TouchableOpacity``;
 
@@ -49,14 +48,8 @@ export const CenteredContainer = styled.View`
   justify-content: center;
 `;
 
-export const Photo = styled.TouchableOpacity`
-  margin-top: 24px;
-  border: 1px solid black;
-  padding: 12px;
-  height: 500px;
-`;
-
-export const Teste = styled.View`
-  height: 500px;
-  width: 100%;
+export const Image = styled.Image`
+  height: 96px;
+  width: 128px;
+  border-radius: 8px;
 `;

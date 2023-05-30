@@ -9,7 +9,6 @@ export const Container = styled.SafeAreaView`
   background-color: #fdf1e3;
 `;
 
-
 export const Header = styled.View`
   flex-direction: row;
   justify-content: space-between;
@@ -44,8 +43,6 @@ export const SelectDayContainer = styled.View`
   gap: 8px;
 `;
 
-
-
 export const SelectHourContainer = styled.View`
   margin-top: 24px;
   gap: 8px;
@@ -61,11 +58,10 @@ export const SelectHour = styled.TouchableOpacity`
   align-items: center;
 `;
 
-
 export const Footer = styled.View`
   min-height: 110px;
+  background-color: #fafafa;
 `;
-
 
 export const FooterContainer = styled.SafeAreaView`
   margin: 24px;
@@ -107,19 +103,10 @@ export const Menu = styled.View`
 
 `;
 
-export const ServiceMenuItem = styled.TouchableOpacity`
+export const MenuItem = styled.TouchableOpacity`
   background-color: #f1731f;
   flex: 1;
   border-radius: 48px;
   padding: 6px 0;
   align-items: center;
 `;
-
-export const ProductMenuItem = styled.TouchableOpacity`
-  background-color: #999;
-  flex: 1;
-  padding: 6px 0;
-  border-radius: 48px;
-  align-items: center;
-`;
-

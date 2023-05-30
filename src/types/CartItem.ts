@@ -1,6 +1,7 @@
-import { Service } from './service';
+import { UserProduct } from './Product';
+import { UserService } from './service';
 
 export interface CartItem {
-  item: Service;
+  item: UserService | UserProduct;
   quantity?: number;
 }

@@ -1,32 +1,32 @@
 import { FlatList } from 'react-native';
-import { UserService } from '../../types/service';
 import { Text } from '../Text';
 import { AddToCartButton, Image, InfoContainer, Separetor, ServiceContainer } from './styles';
 import {AntDesign} from '@expo/vector-icons';
 import { formatCurrency } from '../../utils/formatCurrency';
+import { UserProduct } from '../../types/Product';
 
 interface ServiceListProps {
-  services: UserService[];
-  addToCart: (service: UserService) => void;
+  products: UserProduct[];
+  addToCart: (product: UserProduct) => void;
 }
 
-export function ServiceList({services, addToCart}: ServiceListProps){
+export function ProductList({products, addToCart}: ServiceListProps){
   return(
     <FlatList
-      data={services}
+      data={products}
       keyExtractor={item => item.id}
       ItemSeparatorComponent={Separetor}
       style={{marginRight: 24}} //in styled components margin right was not working ??
-      renderItem={({item: service}) => (
+      renderItem={({item: product}) => (
         <ServiceContainer>
-          {service.imageUrl ?  <Image source={{ uri: service.imageUrl }}/> : null}
+          {product.imageUrl ?  <Image source={{ uri: product.imageUrl }}/> : null}
           <InfoContainer>
-            <Text size={20} weight='600'>{service.name}</Text>
-            <Text>{service.time} min</Text>
-            <Text>{formatCurrency(service.price)}</Text>
+            <Text size={20} weight='600'>{product.name}</Text>
+            <Text>{product.description} min</Text>
+            <Text>{formatCurrency(product.price)}</Text>
           </InfoContainer>
           <AddToCartButton
-            onPress={() => addToCart(service)}
+            onPress={() => addToCart(product)}
           >
             <AntDesign name="pluscircleo" size={24} color="red" />
           </AddToCartButton>

@@ -5,3 +5,6 @@ export interface Service{
   time: number;
   imagePath?: string | null;
 }
+
+
+export type UserService = Omit<Service, 'imagePath'> & {imageUrl: null | string}

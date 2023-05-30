@@ -1,7 +1,7 @@
 import { FlatList } from 'react-native';
 import { Text } from '../Text';
 import { CartItem } from '../../types/CartItem';
-import { Actions, InfoContainer, Item, ServiceInfo, Summary, SummaryInfo } from './styles';
+import { Actions, Image, Info, InfoContainer, Item, QuantityCoitaner, ServiceInfo, Summary, SummaryInfo } from './styles';
 import { formatCurrency } from '../../utils/formatCurrency';
 import { Button } from '../button';
 import { AntDesign } from '@expo/vector-icons';
@@ -20,10 +20,19 @@ interface CartProps {
 
 export function Cart({cartItems, handleRemoveCartItem, handleSchedule, schedule, handleCancelOrder}: CartProps){
   const {totalTime, totalPrice} = cartItems.reduce((acc, item) => {
-    return {
-      totalTime: acc.totalTime + item.item.time,
-      totalPrice: acc.totalPrice + item.item.price,
-    };
+    if(!item.item.time && item.quantity){
+      return {
+        totalTime: acc.totalTime,
+        totalPrice: acc.totalPrice + item.quantity * item.item.price,
+      };
+    }else if(item.item.time){
+      return {
+        totalTime: acc.totalTime + item.item.time,
+        totalPrice: acc.totalPrice + item.item.price,
+      };
+    }
+
+    return {totalTime: acc.totalTime, totalPrice: acc.totalPrice};
   }, {totalTime: 0, totalPrice:0});
 
   return(
@@ -37,10 +46,23 @@ export function Cart({cartItems, handleRemoveCartItem, handleSchedule, schedule,
           renderItem={({item: service}) => (
             <Item>
               <ServiceInfo>
-                <Text weight='600' size={14}>{service.item.name}</Text>
+                {service.item.imageUrl && <Image source={{ uri: service.item.imageUrl}}/>}
+
+                <QuantityCoitaner>
+                  <Text size={14} color='#666'>{service.quantity ? service.quantity : 1}x</Text>
+                </QuantityCoitaner>
+
                 <InfoContainer>
-                  <Text size={14} color='#666'>{service.item.time} min</Text>
-                  <Text size={14} color='#666'>{formatCurrency(service.item.price)}</Text>
+                  <Text weight='600' size={14}>{service.item.name}</Text>
+                  <Info>
+                    {service.item.time && (
+                      <>
+                        <Text size={14} color='#666'>{service.item.time} min</Text>
+                        <Text size={14} color='#666'>|</Text>
+                      </>
+                    )}
+                    <Text size={14} color='#666'>{formatCurrency(service.item.price)}</Text>
+                  </Info>
                 </InfoContainer>
               </ServiceInfo>
 
