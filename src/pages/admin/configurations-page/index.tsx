@@ -25,6 +25,7 @@ import { Button } from '../../../components/button';
 import { RangeModal } from '../../../components/range-hour-modal';
 
 
+
 export interface HourInterface {
   from: {
     hour: string;
@@ -50,8 +51,6 @@ export function ConfigurationsPage(){
   const [rangeModalVisibility, setRangeModalVisibility] = useState<boolean>(false);
   const [rangeModalData, setRangeModalData] = useState('');
   const [error, setError] = useState('');
-
-
 
   function handelDisableWeekend(){
     const mark = {} as MarkedDates;
@@ -144,11 +143,15 @@ export function ConfigurationsPage(){
       }
     }
     const dateId = getYearMontSring();
-    await setDoc(doc(FIREBASE_DB, 'Atendimento', dateId), {
-      morningHour,
-      afternoonHour,
-      days
-    });
+    try{
+      await setDoc(doc(FIREBASE_DB, 'Atendimento', dateId), {
+        morningHour,
+        afternoonHour,
+        days
+      });
+    }catch(error){
+      throw new Error('Erro ao salvar configuracoes' + error);
+    }
   }
 
   //it should be morning or afternoon/night but i cant found a good name to it
@@ -178,13 +181,13 @@ export function ConfigurationsPage(){
   }
 
   useEffect(()=> {
-    setIsLoading(true);
-    const mes = getYearMontSring();
-    const dockRef = doc(FIREBASE_DB, 'Atendimento', mes);
-    const getData = async () => {
+    (async () => {
+      setIsLoading(true);
+      const mes = getYearMontSring();
+      const dockRef = doc(FIREBASE_DB, 'Atendimento', mes);
       const dataSnap = await getDoc(dockRef);
       const data = dataSnap.data();
-      if(!data){
+      if(!dataSnap.exists()){
         return;
       }
       const mark = {} as MarkedDates;
@@ -195,10 +198,9 @@ export function ConfigurationsPage(){
       setAfternoonHour(data?.afternoonHour);
       setMorningHour(data?.morningHour);
       setSelected(mark);
-    };
+      setIsLoading(false);
+    })();
 
-    getData();
-    setIsLoading(false);
   }, []);
 
 
