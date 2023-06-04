@@ -9,7 +9,7 @@ export const Container = styled.SafeAreaView`
   margin-top: ${isAndroid ? `${StatusBar.currentHeight}px` : '0px'};
   padding: 24px 24px 0;
   flex: 1;
-  background-color: #fdf1e3;
+  background-color: #fff;
 
 `;
 
@@ -20,7 +20,13 @@ export const CenteredContainer = styled.View`
 `;
 
 export const ScheduleItem = styled.View`
+  background-color: #f5f5f5	;
+  /* justify-content: center; */
+  border-radius: 8px;
+  box-shadow: 8px 2px 1px rgba(0,0,0, 1);
+  elevation: 3;
   gap: 8px;
+  padding: 16px;
 `;
 
 export const ServicesList = styled.View`
@@ -46,15 +52,18 @@ justify-content: space-between;
 export const Separetor = styled.View`
   width:100%;
   height: 1px;
-  background: orange;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
 `;
 
 export const MenuContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
-  margin-top: 16px;
+  margin-top: 24px;
 `;
 
-export const OptionButton = styled.TouchableOpacity``;
+export const OptionButton = styled.TouchableOpacity`
+  background-color: #c173e6;
+  padding: 8px;
+  border-radius: 8px;
+`;

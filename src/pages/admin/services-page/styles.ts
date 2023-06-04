@@ -6,14 +6,19 @@ const isAndroid = Platform.OS === 'android';
 export const Container = styled.SafeAreaView`
   margin-top: ${isAndroid ? `${StatusBar.currentHeight}px` : '0px'};
   flex:1;
-  background-color: #fdf1e3;
+  background-color: #fff;
   padding: 24px;
 `;
 
 
 export const ServiceContainer = styled.View`
   flex-direction: row;
-  height: 96px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+  flex: 1;
+  padding: 8px;
+  box-shadow: 8px 2px 1px rgba(0,0,0,1);
+  elevation: 3;
 `;
 
 export const InfoContainer = styled.View`
@@ -34,8 +39,7 @@ export const EditContainer = styled.View`
 export const Separetor = styled.View`
   width:100%;
   height: 1px;
-  background: orange;
-  margin: 16px 0;
+  margin-bottom: 16px;
 `;
 
 export const EditService = styled.TouchableOpacity``;

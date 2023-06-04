@@ -238,7 +238,7 @@ export function ProductsPage(){
         ) : ( products.length === 0 ? (
           <CenteredContainer>
             <Text size={24} weight='600' color='#666'>Nenhum produto</Text>
-            <Text size={24} weight='600' color='#666' style={{marginVertical: 8}}>Adicione Produtos</Text>
+            <Text size={24} weight='600' color='#666'>Adicione Produtos</Text>
             <Text size={24} weight='600' color='#666'> no botão abaixo</Text>
           </CenteredContainer>
         ) :
@@ -260,7 +260,7 @@ export function ProductsPage(){
                   <EditService
                     onPress={() => handleEditServiceModal(product)}
                   >
-                    <AntDesign name='edit' size={24} color='black'/>
+                    <AntDesign name='edit' size={24} color='#43c6ac'/>
                   </EditService>
                   <DeleteService
                     onPress={() => handleDelete(product.id)}

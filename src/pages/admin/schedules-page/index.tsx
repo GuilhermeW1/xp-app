@@ -13,6 +13,9 @@ import { formatTime } from '../../../utils/formatTime';
 import { formatCurrency } from '../../../utils/formatCurrency';
 import { generateRandomId } from '../../../utils/randomId';
 import { MarkedDates } from 'react-native-calendars/src/types';
+import { Button } from '../../../components/button';
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet } from 'react-native';
 
 interface ScheduleWithId extends ScheduleInterface { id: string }
 //NOTE: i think i can use a useReducer
@@ -26,12 +29,14 @@ export function SchedulesPage(){
 
   function handleDay(date: string, time: number){
     if(timestamp  === time){
+      setSelected({});
+      setTimestamp(1);
       return;
     }
 
     setTimestamp(time);
     const mark = {} as MarkedDates;
-    mark[date] = {selected: true, selectedColor: 'red'};
+    mark[date] = {selected: true, selectedColor: '#43c6ac'};
     setSelected(mark);
   }
 
@@ -64,48 +69,6 @@ export function SchedulesPage(){
         return;
       }
 
-      // snapshot.docChanges().forEach(change => {
-      //   const doc = change.doc;
-      //   const data = doc.data();
-      //   const schedule: ScheduleWithId = {
-      //     id: doc.id,
-      //     date: data.date,
-      //     price: data.price,
-      //     time: data.time,
-      //     userId: data.userId,
-      //     services: data.services
-      //   };
-
-      //   if(change.type === 'added'){
-      //     setSchedules(prev => {
-      //       if(!prev) return null;
-
-      //       if(!prev.some(item => item.id === schedule.id)){
-      //         return [...prev, schedule];
-      //       }
-      //       return prev;
-      //     });
-      //     return;
-      //   }
-      //   if(change.type === 'modified'){
-      //     setSchedules(prev => {
-      //       if(!prev) return null;
-
-      //       return prev?.map(item => item.id === schedule.id ? schedule : item);
-      //     });
-      //     return;
-      //   }
-      //   if(change.type === 'removed'){
-      //     setSchedules(prev => {
-      //       if(!prev) return null;
-
-      //       return prev?.filter(item => item.id !== schedule.id);
-      //     });
-      //     return;
-      //   }
-      //   console.log('aa');
-      // });
-
       snapshot.forEach((doc) => {
         const data = doc.data();
         const schedule: ScheduleWithId = {
@@ -120,39 +83,28 @@ export function SchedulesPage(){
         dbSchedules.push(schedule);
       });
 
-
       setSchedules(dbSchedules);
       setIsLoading(false);
     }, (error) => {console.log(error); setIsLoading(false);});
 
     return () => unsubscribe();
 
-
   }, [timestamp]);
 
   return (
     <Container>
-      {/* <LogoutButton
-        onPress={signOut}
-      >
-        <Text>Sign Out</Text>
-      </LogoutButton> */}
-
       <CustomCalendar
         selected={selected}
         handleSelectDay={({timestamp, dateString}) => handleDay(dateString,timestamp)}
       />
       <MenuContainer>
 
-        <OptionButton onPress={() => {setTimestamp(1); setSelected({});}}>
-          <Text size={14}>Pendentes</Text>
-        </OptionButton>
-        {/* <OptionButton>
-          <Text size={14}>Agendamentos</Text>
-        </OptionButton> */}
-        <OptionButton onPress={() => {setTimestamp(2); setSelected({});}}>
-          <Text size={14} >Historico</Text>
-        </OptionButton>
+        <Button onPress={() => {setTimestamp(1); setSelected({});}}>
+          Pendentes
+        </Button>
+        <Button onPress={() => {setTimestamp(2); setSelected({});}}>
+          Historico
+        </Button>
       </MenuContainer>
       {isLoading ? (
         <CenteredContainer>
@@ -165,14 +117,15 @@ export function SchedulesPage(){
             data={schedules}
             style={{marginTop: 24}}
             ItemSeparatorComponent={Separetor}
+            showsVerticalScrollIndicator={false}
             renderItem={({item: schedule}) => {
               const {formatedDate, hour, minutes} = getFirebaseDateAndHour(schedule.date.seconds);
               return(
-                <ScheduleItem>
+                <ScheduleItem >
                   <ServicesList>
                     {schedule.services.map((doc, index) => {
                       return(
-                        <Text key={index} weight='600' color='#666'>{doc.name}</Text>
+                        <Text key={index} weight='600' >{doc.name}</Text>
                       );})}
                   </ServicesList>
                   <ItemContainer>
@@ -182,7 +135,7 @@ export function SchedulesPage(){
                     </TimeContainer>
                     <InfoContainer>
                       <Text size={14}>{formatTime(schedule.time)}</Text>
-                      <Text size={14} style={{marginBottom: 20}}>{formatCurrency(schedule.price)}</Text>
+                      <Text size={14}>{formatCurrency(schedule.price)}</Text>
                     </InfoContainer>
                   </ItemContainer>
                 </ScheduleItem>

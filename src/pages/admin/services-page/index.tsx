@@ -250,14 +250,14 @@ export function ServicesPage(){
                 {service.imageUrl !== null && !undefined && <Image source={{ uri: service.imageUrl }}/>}
                 <InfoContainer>
                   <Text weight='600'>{service.name}</Text>
-                  <Text size={14} >Tempo: {service.time} min</Text>
+                  <Text size={14} >{service.time} min</Text>
                   <Text size={14} color='#666'>{formatCurrency(service.price)}</Text>
                 </InfoContainer>
                 <EditContainer>
                   <EditService
                     onPress={() => handleEditServiceModal(service)}
                   >
-                    <AntDesign name='edit' size={24} color='black'/>
+                    <AntDesign name='edit' size={24} color='#43c6ac'/>
                   </EditService>
                   <DeleteService
                     onPress={() => handleDelete(service.id)}

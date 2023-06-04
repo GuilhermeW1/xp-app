@@ -136,6 +136,25 @@ export default function CustomCalendar({selected, handleSelectDay, minDays, maxD
       onDayPress={(date) => handleSelectDay(date)}
       minDate={minDays}
       maxDate={maxDays}
+      style={{
+        backgroundColor: '#191645',
+        borderRadius: 8
+      }}
+      theme={{
+        backgroundColor: '#191645',
+        calendarBackground: '#191645',
+        dayTextColor: '#fff',
+        monthTextColor: '#fff',
+        todayTextColor: '#43c6ac',
+        // backgroundColor: '#ffffff',
+        // calendarBackground: '#ffffff',
+        // textSectionTitleColor: '#b6c1cd',
+        // selectedDayBackgroundColor: '#00adf5',
+        // selectedDayTextColor: '#ffffff',
+        // todayTextColor: '#00adf5',
+        // dayTextColor: '#2d4150',
+        // textDisabledColor: '#d9e'
+      }}
     />
   );
 }

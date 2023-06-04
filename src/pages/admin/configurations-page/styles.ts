@@ -9,7 +9,7 @@ export const Container = styled.SafeAreaView`
   margin-top: ${isAndroid ? `${StatusBar.currentHeight}px` : '0px'};
   flex: 1;
   flex-direction: column;
-  background-color: #fdf1e3;
+  background-color: #fff;
   gap: 10px;
 `;
 

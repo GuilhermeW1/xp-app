@@ -51,6 +51,7 @@ export function ConfigurationsPage(){
   const [rangeModalVisibility, setRangeModalVisibility] = useState<boolean>(false);
   const [rangeModalData, setRangeModalData] = useState('');
   const [error, setError] = useState('');
+  const [noConfiguration, setNoConfiguration] = useState('');
 
   function handelDisableWeekend(){
     const mark = {} as MarkedDates;
@@ -71,7 +72,7 @@ export function ConfigurationsPage(){
       const date = new Date(`${year}-${month}-${i}`);
       const dateString = `${year}-${month}-${i}`;
       if(date.getDay() == 5 || date.getDay() == 6){
-        mark[formatStringDate(dateString)] = { selectedColor: 'red', selected: true};
+        mark[formatStringDate(dateString)] = { selectedColor: '#8c03fb', selected: true};
       }
     }
     setSelected({...selected, ...mark});
@@ -121,10 +122,10 @@ export function ConfigurationsPage(){
       if(selectedCopy[currentDate].selected){
         selectedCopy[currentDate] = {selected: false, selectedColor: ''};
       }else{
-        mark[currentDate] = {selected: true, selectedColor: 'red'};
+        mark[currentDate] = {selected: true, selectedColor: '#8c03fb'};
       }
     }else{
-      mark[currentDate] = {selected: true, selectedColor: 'red'};
+      mark[currentDate] = {selected: true, selectedColor: '#8c03fb'};
     }
     setSelected({...selected, ...mark});
   }
@@ -149,7 +150,11 @@ export function ConfigurationsPage(){
         afternoonHour,
         days
       });
+
+      alert('Configuracões salvas');
+      setNoConfiguration('');
     }catch(error){
+      alert('Erro ao salvar configurações');
       throw new Error('Erro ao salvar configuracoes' + error);
     }
   }
@@ -188,11 +193,13 @@ export function ConfigurationsPage(){
       const dataSnap = await getDoc(dockRef);
       const data = dataSnap.data();
       if(!dataSnap.exists()){
+        setNoConfiguration('Não ha configurações setadas');
+        setIsLoading(false);
         return;
       }
       const mark = {} as MarkedDates;
       data?.days.map((day: string) => (
-        mark[day] = {selected: true, selectedColor: 'red'}
+        mark[day] = {selected: true, selectedColor: '#8c03fb'}
       ));
 
       setAfternoonHour(data?.afternoonHour);
@@ -207,7 +214,8 @@ export function ConfigurationsPage(){
   return (
     <Container>
       <CalendarContainer>
-        <Text weight='600' size={16} style={{alignSelf: 'center', marginBottom: 16}}>Selecione os dias que ira atender</Text>
+        <Text weight='600' size={16} style={{alignSelf: 'center', marginBottom: noConfiguration ? 0 : 16}}>Selecione os dias que não ira atender</Text>
+        {noConfiguration && <Text size={14} color='red' style={{alignSelf: 'center', marginBottom: 16}}>{noConfiguration}</Text>}
         {isLoading ? (
           <CenteredContainer>
             <ActivityIndicator size='large' />

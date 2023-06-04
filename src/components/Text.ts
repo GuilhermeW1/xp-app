@@ -9,7 +9,7 @@ interface TextProps {
 
 export const Text = styled.Text<TextProps>`
   font-family: ${({ weight }) => weight ? `GeneralSans-${weight}` : 'GeneralSans-400'};
-  color: ${({ color }) => color || '#333'};
+  color: ${({ color }) => color || '#2c2c2c'};
   font-size: ${({ size }) => size ? `${size}px` : '16px'};
   opacity: ${({ opacity }) => opacity || 1};
 `;
