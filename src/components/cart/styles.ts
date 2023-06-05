@@ -1,10 +1,13 @@
 import styled from 'styled-components/native';
 
 export const Item = styled.View`
-  padding: 8px 0;
+  padding: 8px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 8px;
 `;
 
 export const ServiceInfo = styled.View`
@@ -26,7 +29,7 @@ export const Info = styled.View`
 
 export const QuantityCoitaner = styled.View`
   min-width: 15px;
-  margin-left: 12px;
+  margin-left: 8px;
 `;
 
 export const Summary = styled.View`

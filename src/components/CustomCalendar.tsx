@@ -146,14 +146,6 @@ export default function CustomCalendar({selected, handleSelectDay, minDays, maxD
         dayTextColor: '#fff',
         monthTextColor: '#fff',
         todayTextColor: '#43c6ac',
-        // backgroundColor: '#ffffff',
-        // calendarBackground: '#ffffff',
-        // textSectionTitleColor: '#b6c1cd',
-        // selectedDayBackgroundColor: '#00adf5',
-        // selectedDayTextColor: '#ffffff',
-        // todayTextColor: '#00adf5',
-        // dayTextColor: '#2d4150',
-        // textDisabledColor: '#d9e'
       }}
     />
   );

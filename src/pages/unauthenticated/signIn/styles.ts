@@ -16,7 +16,7 @@ export const SignInButton = styled.TouchableOpacity`
   flex-direction: row;
   color: orange;
   padding: 14px 24px;
-  background: ${({disabled}) => disabled? '#999' : '#FF6000'};
+  background: ${({disabled}) => disabled? '#999' : '#43c6ac'};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,7 +28,7 @@ export const SignInButton = styled.TouchableOpacity`
 export const CreateAccountButton = styled.TouchableOpacity``;
 
 export const EmailTextInput = styled.TextInput`
-  border: 1px solid orange;
+  border: 1px solid #43c6ac;
   width: 350px;
   padding: 8px;
   border-radius: 8px;
@@ -49,7 +49,7 @@ export const LoginFormContainer = styled.View`
 
 export const PasswordContainer = styled.View`
   flex-direction: row;
-  border: 1px solid orange;
+  border: 1px solid #43c6ac;
   border-radius: 8px;
   padding: 8px;
 
@@ -59,3 +59,8 @@ export const PasswordContainer = styled.View`
 `;
 
 export const ToggleVisible = styled.TouchableOpacity``;
+
+export const BackgroundImage = styled.ImageBackground`
+  height: 200px;
+  width: 200px;
+`;

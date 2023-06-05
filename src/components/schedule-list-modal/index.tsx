@@ -68,10 +68,11 @@ export function ScheduleListModal({visible, userId, onClose, history}: ScheduleL
       <Overlay>
         <ModalBody>
           <CloseModal onPress={onClose}>
-            <Text><AntDesign name="closecircleo" size={30} color="orange" /></Text></CloseModal>
+            <Text><AntDesign name="closecircleo" size={30} color="#43c6ac" /></Text></CloseModal>
           <FlatList
             style={{marginTop: 24}}
             data={schedules}
+            showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.id.toString()}
             ItemSeparatorComponent={Separetor}
             renderItem={({item: schedule}) => {

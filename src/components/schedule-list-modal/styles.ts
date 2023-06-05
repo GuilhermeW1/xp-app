@@ -22,13 +22,19 @@ export const CloseButton = styled.TouchableOpacity``;
 
 export const ScheduleItem = styled.View`
   gap: 8px;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+  /* flex: 1; */
+  padding: 8px;
+  box-shadow: 8px 2px 1px rgba(0,0,0,1);
+  elevation: 3;
 `;
 
 export const ServicesList = styled.View`
   max-height: 20px;
   flex-direction: row;
   gap: 8px;
-  flex: 1;
+
 `;
 
 export const TimeContainer = styled.View`
@@ -47,7 +53,6 @@ justify-content: space-between;
 export const Separetor = styled.View`
   width:100%;
   height: 1px;
-  background: orange;
   margin-bottom: 8px;
 `;
 

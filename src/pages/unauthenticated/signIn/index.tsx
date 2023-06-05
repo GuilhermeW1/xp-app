@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text } from '../../../components/Text';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import { Container, EmailTextInput, LoginFormContainer, PasswordContainer, PasswordTextInput, SignInButton, ToggleVisible } from './styles';
+import { BackgroundImage, Container, EmailTextInput, LoginFormContainer, PasswordContainer, PasswordTextInput, SignInButton, ToggleVisible } from './styles';
 import { useAuth } from '../../../context/auth-context';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, ImageBackground } from 'react-native';
 import { Link } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-
+import { getDownloadURL, ref } from 'firebase/storage';
+import { FIREBASE_STORAGE } from '../../../../firebaseConfig';
 
 const SignIn: React.FC = () => {
-  const [email, setEmail] = useState<string>('gui.a.weiss@hotmail.com');//gui.a.weiss@hotmail.com//teste123@gmail.com
-  const [password, setPassword] = useState<string>('weiss1234');//weiss1234//12345678
+  const [email, setEmail] = useState<string>('teste123@gmail.com');//gui.a.weiss@hotmail.com//teste123@gmail.com
+  const [password, setPassword] = useState<string>('12345678');//weiss1234//12345678
   const [isLoading, setIsLoading] = useState(false);
   const [invalidCredentials, setInvalidCredentials] = useState<null | boolean>(null);
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true);
+  const [imageUrl, setImageUrl] = useState('');
 
   const {signInWithEmailAndPassword} = useAuth();
 
@@ -35,10 +37,23 @@ const SignIn: React.FC = () => {
     }
   }
 
+  useEffect(() => {
+    (async() => {
+      const imageRef = ref(FIREBASE_STORAGE, 'app-images/diogoapp.png');
+      try{
+        const url = await getDownloadURL(imageRef);
+        setImageUrl(url);
+      }catch(error){
+        console.log(error);
+      }
+    })();
+
+  },[]);
+
   return (
     <Container>
-      <Text size={24} weight='600' opacity={0.7}>Bem vindo</Text>
-
+      {imageUrl && <BackgroundImage source={{uri: imageUrl}} resizeMode='cover'/>}
+      <Text size={24} weight='600' opacity={0.7} >Bem vindo</Text>
       <LoginFormContainer>
         {invalidCredentials ?
           <Text color='red' weight='400' size={16}>Usuario ou Senha incorretos</Text>
@@ -63,7 +78,7 @@ const SignIn: React.FC = () => {
             onPress={() => setPasswordVisibility(!passwordVisibility)}
           >
             <Text>
-              {passwordVisibility ? <Ionicons name="eye-off-outline" size={24} color="orange" /> :
+              {passwordVisibility ? <Ionicons name="eye-off-outline" size={24} color="#43c6ac"/> :
                 <Ionicons name="eye-outline" size={24} color="orange" />
               }
             </Text>
@@ -73,7 +88,7 @@ const SignIn: React.FC = () => {
           onPress={handleSignIn}
           disabled={isLoading}
         >
-          {isLoading ? <ActivityIndicator size='small' color='#FF6000'/> : (
+          {isLoading ? <ActivityIndicator size='small' color='#43c6ac'/> : (
             <>
               <Text weight='600' color='#fff' size={16}>Entrar</Text>
               <SimpleLineIcons name='login' size={24} color='#fff'/>
@@ -83,7 +98,7 @@ const SignIn: React.FC = () => {
       </LoginFormContainer>
 
       <Link to={{screen: 'CreateAccount'}}>
-        <Text style={{textDecorationLine: 'underline'}} size={14} color='blue'>Criar conta</Text>
+        <Text style={{textDecorationLine: 'underline'}} size={14} color='#191645'>Criar conta</Text>
       </Link>
     </Container>
   );

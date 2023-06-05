@@ -16,7 +16,6 @@ export function ServiceList({services, addToCart}: ServiceListProps){
       data={services}
       keyExtractor={item => item.id}
       ItemSeparatorComponent={Separetor}
-      style={{marginRight: 24}} //in styled components margin right was not working ??
       renderItem={({item: service}) => (
         <ServiceContainer>
           {service.imageUrl ?  <Image source={{ uri: service.imageUrl }}/> : null}
@@ -28,7 +27,7 @@ export function ServiceList({services, addToCart}: ServiceListProps){
           <AddToCartButton
             onPress={() => addToCart(service)}
           >
-            <AntDesign name="pluscircleo" size={24} color="red" />
+            <AntDesign name="pluscircleo" size={24} color="#43c6ac" />
           </AddToCartButton>
         </ServiceContainer>
       )}

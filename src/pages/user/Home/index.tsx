@@ -21,7 +21,7 @@ import { Link } from '@react-navigation/native';
 import { ConfirmModal } from '../../../components/confirm-modal';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { UserProduct } from '../../../types/Product';
-import { ProductList } from '../../../components/products-list copy';
+import { ProductList } from '../../../components/products-list';
 
 //
 //NOTE: the app is based on cartItems where service have a defined time and product dont have
@@ -172,6 +172,7 @@ export default function HomeUser(){
     setMinutes(min);
   }
 
+  //NOTE: essa funcao ta muito grande
   async function handleAddHorario(){
     setScheduleLoading(true);
     setTimeError('');
@@ -338,8 +339,8 @@ export default function HomeUser(){
       }
 
     })();
-    // getServices();
   },[selectedMenuItem]);
+
   return(
     <>
       <Container>
@@ -375,13 +376,13 @@ export default function HomeUser(){
           {!schedule && (
             <Menu>
               <MenuItem
-                style={selectedMenuItem == 1 ? {backgroundColor: '#f1731f'} : {opacity: 0.5}}
+                style={selectedMenuItem == 1 ? {backgroundColor: '#43c6ac'} : {opacity: 0.5}}
                 onPress={() => setSelectedMenuItem(1)}
               >
                 <Text color='#fff'>Servicos</Text>
               </MenuItem >
               <MenuItem
-                style={selectedMenuItem == 2 ? {backgroundColor: '#f1731f'} : {opacity: 0.5}}
+                style={selectedMenuItem == 2 ? {backgroundColor: '#43c6ac'} : {opacity: 0.5}}
                 onPress={() => setSelectedMenuItem(2)}
               >
                 <Text color='#fff'>Produtos</Text>
@@ -414,7 +415,7 @@ export default function HomeUser(){
               </SelectHourContainer>
               <ButtonContainer>
                 <Button
-                  disabled={day == null || hour == '00' || scheduleLoading}
+                  disabled={day == null || hour == '00' || !hour || scheduleLoading}
                   onPress={handleAddHorario}>
                 Agendar Horario
                 </Button>

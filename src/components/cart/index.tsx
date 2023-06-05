@@ -70,7 +70,7 @@ export function Cart({cartItems, handleRemoveCartItem, handleSchedule, schedule,
                 <Actions
                   onPress={() => handleRemoveCartItem(service)}
                 >
-                  <AntDesign name="minuscircleo" size={20} color="red" />
+                  <AntDesign name="minuscircleo" size={20} color="#43c6ac" />
                 </Actions>
               )}
             </Item>
@@ -81,14 +81,14 @@ export function Cart({cartItems, handleRemoveCartItem, handleSchedule, schedule,
 
         <SummaryInfo>
           {cartItems.length == 0 ?
-            <Text color='#999'>Nenhum servico selecionado</Text>
+            <Text color='#fff'>Nenhum servico selecionado</Text>
             :
             (
               <>
-                <Text style={{marginTop: 8}}>Tempo</Text>
-                <Text weight='600'>{formatTime(totalTime)}</Text>
-                <Text>Total</Text>
-                <Text weight='600'>{formatCurrency(totalPrice)}</Text>
+                <Text style={{marginTop: 8}} color='#fff'>Tempo</Text>
+                <Text weight='600' color='#fff'>{formatTime(totalTime)}</Text>
+                <Text style={{marginTop: 8}} color='#fff'>Total</Text>
+                <Text weight='600' color='#fff'>{formatCurrency(totalPrice)}</Text>
               </>
 
             )

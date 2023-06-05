@@ -15,7 +15,7 @@ export const Container = styled.SafeAreaView`
 export const SignInButton = styled.TouchableOpacity`
   flex-direction: row;
   color: orange;
-  background-color: #FF6000;
+  background-color: #43c6ac;
   display: flex;
   padding: 16px 24px;
   align-items: center;
@@ -28,7 +28,7 @@ export const SignInButton = styled.TouchableOpacity`
 export const CreateAccountButton = styled.TouchableOpacity``;
 
 export const EmailTextInput = styled.TextInput`
-  border: 1px solid orange;
+  border: 1px solid #43c6ac;
   width: 350px;
   padding: 8px;
   border-radius: 8px;
@@ -36,7 +36,7 @@ export const EmailTextInput = styled.TextInput`
 
 
 export const PasswordTextInput = styled.TextInput`
-  border: 1px solid orange;
+  border: 1px solid #43c6ac;
   width: 350px;
   padding: 8px;
   border-radius: 8px;

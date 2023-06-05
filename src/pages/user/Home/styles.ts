@@ -6,7 +6,7 @@ const isAndroid = Platform.OS === 'android';
 export const Container = styled.SafeAreaView`
   margin-top: ${isAndroid ? `${StatusBar.currentHeight}px` : '0px'};
   flex: 1;
-  background-color: #fdf1e3;
+  background-color: #fffffd;
 `;
 
 export const Header = styled.View`
@@ -30,7 +30,7 @@ export const UserContainer = styled.TouchableOpacity`
 `;
 
 export const SelectDay = styled.TouchableOpacity`
-  border: 2px solid #FF6000;
+  border: 2px solid #43c6ac;
   border-radius: 30px;
   padding: 8px 16px;
   flex-direction: row;
@@ -50,7 +50,7 @@ export const SelectHourContainer = styled.View`
 `;
 
 export const SelectHour = styled.TouchableOpacity`
-  border: 2px solid ${({disabled}) => disabled ? '#666' : '#FF6000'};
+  border: 2px solid ${({disabled}) => disabled ? '#666' : '#43c6ac'};
   border-radius: 30px;
   padding: 8px 16px;
   flex-direction: row;
@@ -60,7 +60,7 @@ export const SelectHour = styled.TouchableOpacity`
 
 export const Footer = styled.View`
   min-height: 110px;
-  background-color: #fafafa;
+  background-color: #191645;
 `;
 
 export const FooterContainer = styled.SafeAreaView`
@@ -104,7 +104,7 @@ export const Menu = styled.View`
 `;
 
 export const MenuItem = styled.TouchableOpacity`
-  background-color: #f1731f;
+  background-color: #43c6ac;
   flex: 1;
   border-radius: 48px;
   padding: 6px 0;

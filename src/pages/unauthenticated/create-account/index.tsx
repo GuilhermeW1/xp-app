@@ -18,6 +18,7 @@ const CreateAccount: React.FC = () => {
 
   return (
     <Container>
+
       <Text size={24} weight='600' opacity={0.7}>Crie sua conta</Text>
 
       <LoginFormContainer>
@@ -51,7 +52,7 @@ const CreateAccount: React.FC = () => {
       </LoginFormContainer>
 
       <Link to={{screen: 'SignIn'}}>
-        <Text style={{textDecorationLine: 'underline'}} size={16} color='blue'>Ja tenho uma conta</Text>
+        <Text style={{textDecorationLine: 'underline'}} size={14} color='#191645'>Ja tenho uma conta</Text>
       </Link>
     </Container>
   );
