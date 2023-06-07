@@ -10,8 +10,8 @@ import { getDownloadURL, ref } from 'firebase/storage';
 import { FIREBASE_STORAGE } from '../../../../firebaseConfig';
 
 const SignIn: React.FC = () => {
-  const [email, setEmail] = useState<string>('teste123@gmail.com');//gui.a.weiss@hotmail.com//teste123@gmail.com
-  const [password, setPassword] = useState<string>('12345678');//weiss1234//12345678
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [invalidCredentials, setInvalidCredentials] = useState<null | boolean>(null);
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true);
