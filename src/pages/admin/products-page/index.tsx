@@ -58,7 +58,7 @@ export function ProductsPage(){
       if(serviceToDelete?.imagePath){
         await Promise.all(
           [
-            deleteDoc(doc(FIREBASE_DB, 'Servicos', id)),
+            deleteDoc(doc(FIREBASE_DB, 'Produtos', id)),
             deleteObject(ref(FIREBASE_STORAGE, serviceToDelete.imagePath))
           ]
         );

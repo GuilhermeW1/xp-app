@@ -256,12 +256,14 @@ export default function HomeUser(){
     }
 
   }
-
   async function loadServices(){
-    setIsLoading(true);
     try{
       const querySnapshot = await getDocs(collection(FIREBASE_DB, 'Servicos'));
-
+      if(querySnapshot.empty){
+        setServices([]);
+        setIsLoading(false);
+        return;
+      }
       const servicesPromises = querySnapshot.docs.map(async (doc) => {
         const data = doc.data();
         const imagePath = data.imagePath ?? null;
@@ -298,6 +300,11 @@ export default function HomeUser(){
     setIsLoading(true);
     try{
       const querySnapshot = await getDocs(collection(FIREBASE_DB, 'Produtos'));
+      if(querySnapshot.empty){
+        setIsLoading(false);
+        setProducts([]);
+        return;
+      }
 
       const servicesPromises = querySnapshot.docs.map(async (doc) => {
         const data = doc.data();
@@ -308,8 +315,9 @@ export default function HomeUser(){
           try{
             url = await getDownloadURL(imageRef);
           }catch(error){
+            setProducts([]);
             console.log(error);
-            throw new Error('erro ao buscar imagePath do servico');
+            throw new Error('erro ao buscar imagePath do produtos');
           }
         }
         const userService: UserProduct =
@@ -428,10 +436,16 @@ export default function HomeUser(){
                 <ActivityIndicator color='#FF6000' size='large'/>
               </CenteredContainer>
             )
-              : selectedMenuItem == 1 ?
+              : selectedMenuItem == 1 ? services.length > 0 ?
                 <ServiceList services={services} addToCart={handleAddToCart}/>
-                :
-                <ProductList products={products} addToCart={handleAddToCart}/>
+                :(<CenteredContainer>
+                  <Text>Nenhum serviço encontrado</Text>
+                </CenteredContainer>)
+                : products.length > 0 ?
+                  <ProductList products={products} addToCart={handleAddToCart}/>
+                  :(<CenteredContainer>
+                    <Text>Nenhum produto encontrado</Text>
+                  </CenteredContainer>)
           }
         </Body>
       </Container>
