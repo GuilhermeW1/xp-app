@@ -14,8 +14,7 @@ import { formatCurrency } from '../../../utils/formatCurrency';
 import { generateRandomId } from '../../../utils/randomId';
 import { MarkedDates } from 'react-native-calendars/src/types';
 import { Button } from '../../../components/button';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet } from 'react-native';
+
 
 interface ScheduleWithId extends ScheduleInterface { id: string }
 //NOTE: i think i can use a useReducer

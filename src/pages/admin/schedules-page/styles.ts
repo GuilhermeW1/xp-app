@@ -26,6 +26,7 @@ export const ScheduleItem = styled.View`
   box-shadow: 8px 2px 1px rgba(0,0,0, 1);
   elevation: 3;
   gap: 8px;
+  height: 100px;
   padding: 16px;
 `;
 
