@@ -335,7 +335,7 @@ export default function HomeUser(){
       setIsLoading(false);
     }catch(error){
       setIsLoading(false);
-      throw new Error('erro ao buscar servicos');
+      throw new Error('erro ao buscar produtos');
     }
   }
   useEffect(() => {

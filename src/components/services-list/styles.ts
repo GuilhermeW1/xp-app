@@ -9,13 +9,13 @@ export const ServiceContainer = styled.View`
   padding: 8px;
   box-shadow: 8px 2px 1px rgba(0,0,0,1);
   elevation: 3;
-
 `;
 
 export const InfoContainer = styled.View`
   /* flex-direction: row; */
+  align-items: stretch;
   margin-left: 16px;
-  gap: 16px;
+  flex: 1;
 `;
 
 export const AddToCartButton = styled.TouchableOpacity`

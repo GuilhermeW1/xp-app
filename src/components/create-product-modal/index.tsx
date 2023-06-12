@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Modal } from 'react-native';
 import { Text } from '../Text';
-import { ModalBody, NameInput, Overlay, TimeInput, ValueInput, CloseModal, ModalOptionsSave, ModalHeader, ImagePickerContainer, Image, SelectImageButton, Separetor } from './styles';
+import { ModalBody, NameInput, Overlay, DescriptionInput, ValueInput, CloseModal, ModalOptionsSave, ModalHeader, ImagePickerContainer, Image, SelectImageButton, Separetor } from './styles';
 import {AntDesign} from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Button } from '../button';
@@ -88,7 +88,7 @@ export function CreateProductModal({visible, closeModal, product, cancelEditProd
       <Overlay>
         <ModalBody>
           <ModalHeader>
-            {product? <Text weight='600'>Editar</Text> : <Text weight='600'>Criar serviço</Text>}
+            {product? <Text weight='600'>Editar</Text> : <Text weight='600'>Criar Produto</Text>}
             <CloseModal
               onPress={closeModal}
             >
@@ -103,7 +103,7 @@ export function CreateProductModal({visible, closeModal, product, cancelEditProd
           />
 
           <Text>Descrição</Text>
-          <TimeInput
+          <DescriptionInput
             value={productDescription}
             onChangeText={setProductDescription}
             keyboardType='ascii-capable'
@@ -144,7 +144,7 @@ export function CreateProductModal({visible, closeModal, product, cancelEditProd
               <Button
                 onPress={handleCreateProduct}
               >
-                Criar servico
+                Criar produto
               </Button>
             )
           ) }

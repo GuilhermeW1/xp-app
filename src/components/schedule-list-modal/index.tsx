@@ -17,11 +17,9 @@ interface ScheduleListModal {
   onClose: () => void;
   history?: boolean
 }
-
 interface SchedulesList extends ScheduleInterface {
   id: string;
 }
-
 
 export function ScheduleListModal({visible, userId, onClose, history}: ScheduleListModal){
   const [schedules ,setSchedules] = useState<SchedulesList[]>([] as SchedulesList[]);
@@ -35,7 +33,6 @@ export function ScheduleListModal({visible, userId, onClose, history}: ScheduleL
       dbQuery = query(collection(FIREBASE_DB ,'Agendamento') ,where('userId', '==', userId));
     }else{
       dbQuery = query(collection(FIREBASE_DB ,'Agendamento') ,where('userId', '==', userId), where('date', '>', date));
-
     }
 
     const unsubscribe = onSnapshot(dbQuery, (snapshot) => {
@@ -69,38 +66,43 @@ export function ScheduleListModal({visible, userId, onClose, history}: ScheduleL
         <ModalBody>
           <CloseModal onPress={onClose}>
             <Text><AntDesign name="closecircleo" size={30} color="#43c6ac" /></Text></CloseModal>
-          <FlatList
-            style={{marginTop: 24}}
-            data={schedules}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={(item) => item.id.toString()}
-            ItemSeparatorComponent={Separetor}
-            renderItem={({item: schedule}) => {
-              const {seconds} = schedule.date;
-              const date = new Date(seconds * 1000);
-              const [formatedDate, fullHour] = date.toLocaleString('pt-BR').split(' ');
-              const [hour, minutes] = fullHour.split(':');
-              return(
-                <ScheduleItem>
-                  <ServicesList>
-                    {schedule.services.map((doc, index) => {
-                      return(
-                        <Text key={index} weight='600' color='#666'>{doc.name}</Text>
-                      );})}
-                  </ServicesList>
-                  <ItemContainer>
-                    <TimeContainer>
-                      <Text size={14}>{`${hour}:${minutes}`}</Text>
-                      <Text size={14}>{formatedDate}</Text>
-                    </TimeContainer>
-                    <InfoContainer>
-                      <Text size={14}>{formatTime(schedule.time)}</Text>
-                      <Text size={14} style={{marginBottom: 20}}>{formatCurrency(schedule.price)}</Text>
-                    </InfoContainer>
-                  </ItemContainer>
-                </ScheduleItem>
-              );}}
-          />
+          {schedules.length < 1 ? <Text>Nenhum agendamento encontrado</Text> :
+            (
+              <FlatList
+                style={{marginTop: 24}}
+                data={schedules}
+                showsVerticalScrollIndicator={false}
+                keyExtractor={(item) => item.id.toString()}
+                ItemSeparatorComponent={Separetor}
+                renderItem={({item: schedule}) => {
+                  const {seconds} = schedule.date;
+                  const date = new Date(seconds * 1000);
+                  const [formatedDate, fullHour] = date.toLocaleString('pt-BR').split(' ');
+                  const [hour, minutes] = fullHour.split(':');
+                  return(
+                    <ScheduleItem>
+                      <ServicesList>
+                        {schedule.services.map((doc, index) => {
+                          return(
+                            <Text key={index} weight='600' color='#666'>{doc.name}</Text>
+                          );})}
+                      </ServicesList>
+                      <ItemContainer>
+                        <TimeContainer>
+                          <Text size={14}>{`${hour}:${minutes}`}</Text>
+                          <Text size={14}>{formatedDate}</Text>
+                        </TimeContainer>
+                        <InfoContainer>
+                          <Text size={14}>{formatTime(schedule.time)}</Text>
+                          <Text size={14} style={{marginBottom: 20}}>{formatCurrency(schedule.price)}</Text>
+                        </InfoContainer>
+                      </ItemContainer>
+                    </ScheduleItem>
+                  );}}
+              />
+
+            )
+          }
         </ModalBody>
       </Overlay>
     </Modal>

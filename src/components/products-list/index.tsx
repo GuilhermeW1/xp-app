@@ -20,9 +20,9 @@ export function ProductList({products, addToCart}: ServiceListProps){
         <ServiceContainer>
           {product.imageUrl ?  <Image source={{ uri: product.imageUrl }}/> : null}
           <InfoContainer>
-            <Text size={20} weight='600'>{product.name}</Text>
-            <Text>{product.description} min</Text>
-            <Text>{formatCurrency(product.price)}</Text>
+            <Text size={16} weight='600'>{product.name}</Text>
+            <Text size={14}>{product.description} min</Text>
+            <Text size={14}>{formatCurrency(product.price)}</Text>
           </InfoContainer>
           <AddToCartButton
             onPress={() => addToCart(product)}

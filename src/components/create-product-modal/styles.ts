@@ -23,24 +23,21 @@ export const ModalHeader = styled.View`
 `;
 
 export const NameInput = styled.TextInput`
-  border: 1px solid orange;
+  border: 1px solid #43c6ac;
   border-radius: 8px;
   padding: 8px;
-
 `;
 
-export const TimeInput = styled.TextInput`
-  border: 1px solid orange;
+export const DescriptionInput = styled.TextInput`
+  border: 1px solid #43c6ac;
   border-radius: 8px;
   padding: 8px;
-
 `;
 
 export const ValueInput = styled.TextInput`
-  border: 1px solid orange;
+  border: 1px solid #43c6ac;
   border-radius: 8px;
   padding: 8px;
-
 `;
 
 export const CreateServiceButton = styled.TouchableOpacity`
@@ -51,13 +48,6 @@ export const CreateServiceButton = styled.TouchableOpacity`
   background: orange;
   border: 1px solid orange;
   width: 110px;
-`;
-
-export const CancelServiceButton = styled.TouchableOpacity`
-  border: 1px solid orange;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid red;
 `;
 
 export const CloseModal = styled.TouchableOpacity`
@@ -90,6 +80,4 @@ export const SelectImageButton = styled.TouchableOpacity`
 
 `;
 
-export const Separetor = styled.View`
-
-`;
+export const Separetor = styled.View``;

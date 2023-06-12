@@ -63,7 +63,7 @@ export function ProductsPage(){
           ]
         );
       }else {
-        deleteDoc(doc(FIREBASE_DB, 'Servicos', id));
+        deleteDoc(doc(FIREBASE_DB, 'Produtos', id));
       }
 
       setProducts(prev => prev.filter(el => el.id != id));

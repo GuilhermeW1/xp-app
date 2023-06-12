@@ -12,16 +12,13 @@ import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../../types/Rotues';
 import { StackNavigationProp } from '@react-navigation/stack';
 
-
-
 type UserScreen = StackNavigationProp<RootStackParamList, 'HomeUser'>;
-
 
 export function User(){
   const {user, signOut} = useAuth();
   const navigate = useNavigation<UserScreen>();
 
-  const [scheduleHour, setSheduleHour] = useState<boolean>(false);
+  const [scheduleHour, setScheduleHour] = useState<boolean>(false);
   const [scheduleListModalVisible, setScheduleListModalVisible] = useState<boolean>(false);
   const [historyModalVisibility, setHistoryModalVisibility] = useState<boolean>(false);
 
@@ -39,9 +36,9 @@ export function User(){
       const dbQuery = query(collection(FIREBASE_DB ,'Agendamento') ,where('userId', '==', user?.id), where('date', '>', date));
       const querySnap = await getDocs(dbQuery);
       if(querySnap.empty){
-        setSheduleHour(false);
+        setScheduleHour(false);
       }else{
-        setSheduleHour(true);
+        setScheduleHour(true);
       }
     };
 
@@ -77,7 +74,6 @@ export function User(){
         </ActionsList>
       </Container>
       <FooterContainer>
-
         <Footer>
           <SecondaryButton
             onPress={signOut}

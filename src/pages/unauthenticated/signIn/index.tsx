@@ -79,7 +79,7 @@ const SignIn: React.FC = () => {
           >
             <Text>
               {passwordVisibility ? <Ionicons name="eye-off-outline" size={24} color="#43c6ac"/> :
-                <Ionicons name="eye-outline" size={24} color="orange" />
+                <Ionicons name="eye-outline" size={24} color="#43c6ac" />
               }
             </Text>
           </ToggleVisible>
