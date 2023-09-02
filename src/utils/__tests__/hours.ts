@@ -66,7 +66,7 @@ describe('test hours', ()=> {
     expect(discountedHours).toEqual(-1);
   });
 
-  it('test', () => {
+  it('should discount 15min if there are just one hour rage available ', () => {
     const hoursCopy = ['09:00'];
     const discountedHours = discountHour(hoursCopy, 15, '09:00');
     expect(discountedHours).toEqual([]);
