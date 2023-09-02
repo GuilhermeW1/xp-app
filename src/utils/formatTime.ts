@@ -1,6 +1,10 @@
 //param time recives a number of minutes can be > 60
 //this function return the formated hours ,
 export function formatTime(time: number): string{
+  if(time > 1440 || time < 0){
+    throw new Error('time range is < 1440 and > 0');
+  }
+
   if(time <=59 ){
     return `${time} min`;
   }

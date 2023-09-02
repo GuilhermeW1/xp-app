@@ -1,5 +1,17 @@
+/**
+ *
+ * @param timeRange accepted just this format "00 - 00" and have to be in hours
+ * @returns hours in intervals of 15 min like, 00:00, 00:15 ...
+ */
 export function getQuarterHourIntervals(timeRange: string): string[] {
   const [startTime, endTime] = timeRange.split(' - ');
+
+  const startTimeNumber = parseInt(startTime);
+  const endTimeNumber = parseInt(endTime);
+  if(startTimeNumber > 24 || startTimeNumber < 0 || endTimeNumber > 24  || endTimeNumber < 0){
+    throw new Error('Invalid format');
+  }
+
   const start = new Date(`1970-01-01T${startTime}:00`);
   const end = new Date(`1970-01-01T${endTime}:00`);
   const intervals: string[] = [];
@@ -25,11 +37,10 @@ function addMinutes(date: Date, minutes: number): Date {
 export function roundTimeToQuarterHour(hr: number, min: number){
   min = Math.round(min / 15) * 15 ;
 
-  if(min == 60){
+  if(min >= 60){
     hr ++;
     min = 0;
   }
-
   // Format the time
   let formattedHours = hr.toString();
   let formattedMinutes = min.toString();
@@ -43,6 +54,8 @@ export function roundTimeToQuarterHour(hr: number, min: number){
   return `${formattedHours}:${formattedMinutes}`;
 }
 
+//this function return a number that the result is he index
+//08:00 = 32; 08:15 = 33
 function timeToIndex(time: string): number {
   const [hours, minutes] = time.split(':');
   const hoursAsInt = parseInt(hours);
@@ -61,6 +74,7 @@ export function discountHour(arrHours: string[], timeToDiscount: number, timeToS
   }
 
   const discount = timeToDiscount / 15; //this makes the range
+  console.log(discount);
   if(discount > arrHours.length){
     return -1;
   }
@@ -76,9 +90,10 @@ export function discountHour(arrHours: string[], timeToDiscount: number, timeToS
     const time = timeAsIndex[i];
     const sequenceTime = timeAsIndex[i+1];
 
-    if(!sequenceTime){
-      break;
-    }
+    //a principio isso e redundante com a logica de desconto
+    // if(!sequenceTime){
+    //   break;
+    // }
 
     if(time !== sequenceTime -1){
       if(discount == 1){
