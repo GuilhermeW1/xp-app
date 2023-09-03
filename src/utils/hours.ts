@@ -74,7 +74,6 @@ export function discountHour(arrHours: string[], timeToDiscount: number, timeToS
   }
 
   const discount = timeToDiscount / 15; //this makes the range
-  console.log(discount);
   if(discount > arrHours.length){
     return -1;
   }

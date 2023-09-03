@@ -7,6 +7,7 @@ export function isProduct(item: unknown): item is UserProduct{
     'id' in item &&
     'name' in item &&
     'description' in item &&
-    'imageUrl' in item
+    'imageUrl' in item &&
+    'price' in item
   );
 }
