@@ -20,7 +20,7 @@ import {
   ServiceHourSelection } from './styles';
 import {AntDesign} from '@expo/vector-icons';
 import { FIREBASE_DB } from '../../../../firebaseConfig';
-import { formatStringDate, getYearMontSring } from '../../../utils/date';
+import { formatDayOfStringDate, getYearMontSring } from '../../../utils/date';
 import { Button } from '../../../components/button';
 import { RangeModal } from '../../../components/range-hour-modal';
 
@@ -72,7 +72,7 @@ export function ConfigurationsPage(){
       const date = new Date(`${year}-${month}-${i}`);
       const dateString = `${year}-${month}-${i}`;
       if(date.getDay() == 5 || date.getDay() == 6){
-        mark[formatStringDate(dateString)] = { selectedColor: '#8c03fb', selected: true};
+        mark[formatDayOfStringDate(dateString)] = { selectedColor: '#8c03fb', selected: true};
       }
     }
     setSelected({...selected, ...mark});
@@ -96,7 +96,7 @@ export function ConfigurationsPage(){
       const date = new Date(`${year}-${month}-${i}`);
       const dateString = `${year}-${month}-${i}`;
       if(date.getDay() == 5 || date.getDay() == 6){
-        mark[formatStringDate(dateString)] = { selectedColor: '', selected: false};
+        mark[formatDayOfStringDate(dateString)] = { selectedColor: '', selected: false};
       }
     }
     setSelected({...selected, ...mark});

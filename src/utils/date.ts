@@ -8,7 +8,7 @@ export function convertDateToStringYYYYMMDD(data: string | number | Date){
   return dateToIso;
 }
 
-export function formatStringDate(date: string){
+export function formatDayOfStringDate(date: string){
   let d: string;
   let m: string;
   const [year, month, day] = date.split('-');
@@ -32,10 +32,10 @@ export  function getDateWithSelectedDay(day: number): string {
   const month = today.getMonth();
   const selectedDate = new Date(year, month, day);
 
-  if (selectedDate.getMonth() !== month) {
-    // Se o dia selecionado for maior que o número de dias no mês atual, retorna o último dia do mês
-    return convertDateToStringYYYYMMDD(new Date(year, month + 1, 0));
-  }
+  // if (selectedDate.getMonth() !== month) {
+  //   // Se o dia selecionado for maior que o número de dias no mês atual, retorna o último dia do mês
+  //   return convertDateToStringYYYYMMDD(new Date(year, month + 1, 0));
+  // }
 
   return convertDateToStringYYYYMMDD(selectedDate);
 }
