@@ -23,9 +23,18 @@ describe('test dates', () => {
   });
 
   it('should format string date 00-00-0000 to y-m-d', () => {
-    const formate = formatDayOfStringDate('2000-07-1');
-    expect(formate).toEqual('2000-07-01');
+    const formateWithDayIncomplete = formatDayOfStringDate('2000-07-1');
+    expect(formateWithDayIncomplete).toEqual('2000-07-01');
+
+    const formateWithAllComplete = formatDayOfStringDate('2000-07-10');
+    expect(formateWithAllComplete).toEqual('2000-07-10');
+
+    const formateWithMontIncomplete = formatDayOfStringDate('2000-7-10');
+    expect(formateWithMontIncomplete).toEqual('2000-07-10');
+
   });
+
+
 
   it('should return year and month as a string', () => {
     const data = getYearMontSring();

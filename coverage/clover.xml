@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1693854273210" clover="3.2.0">
-  <project timestamp="1693854273210" name="All files">
-    <metrics statements="1164" coveredstatements="94" conditionals="480" coveredconditionals="37" methods="240" coveredmethods="21" elements="1884" coveredelements="152" complexity="0" loc="1164" ncloc="1164" packages="31" files="70" classes="70"/>
+<coverage generated="1693855574525" clover="3.2.0">
+  <project timestamp="1693855574525" name="All files">
+    <metrics statements="1158" coveredstatements="104" conditionals="480" coveredconditionals="39" methods="239" coveredmethods="23" elements="1877" coveredelements="166" complexity="0" loc="1158" ncloc="1158" packages="31" files="69" classes="69"/>
     <package name="app">
       <metrics statements="9" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="1" coveredmethods="0"/>
       <file name="App.tsx" path="/home/guilherme/Documents/projects/app/App.tsx">
@@ -1333,16 +1333,16 @@
       </file>
     </package>
     <package name="app.src.utils">
-      <metrics statements="110" coveredstatements="94" conditionals="39" coveredconditionals="37" methods="24" coveredmethods="21"/>
+      <metrics statements="104" coveredstatements="104" conditionals="39" coveredconditionals="39" methods="23" coveredmethods="23"/>
       <file name="date.ts" path="/home/guilherme/Documents/projects/app/src/utils/date.ts">
-        <metrics statements="31" coveredstatements="31" conditionals="4" coveredconditionals="2" methods="9" coveredmethods="9"/>
+        <metrics statements="31" coveredstatements="31" conditionals="4" coveredconditionals="4" methods="9" coveredmethods="9"/>
         <line num="5" count="3" type="stmt"/>
         <line num="6" count="3" type="stmt"/>
         <line num="8" count="3" type="stmt"/>
-        <line num="14" count="1" type="stmt"/>
-        <line num="17" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="19" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="20" count="1" type="stmt"/>
+        <line num="14" count="3" type="stmt"/>
+        <line num="17" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="19" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="20" count="3" type="stmt"/>
         <line num="25" count="1" type="stmt"/>
         <line num="26" count="1" type="stmt"/>
         <line num="30" count="1" type="stmt"/>
@@ -1385,20 +1385,20 @@
         <line num="17" count="1" type="stmt"/>
       </file>
       <file name="getFirebaseDateAndHour.ts" path="/home/guilherme/Documents/projects/app/src/utils/getFirebaseDateAndHour.ts">
-        <metrics statements="4" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
-        <line num="7" count="0" type="stmt"/>
-        <line num="8" count="0" type="stmt"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="11" count="0" type="stmt"/>
+        <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
       </file>
       <file name="getRandomId.ts" path="/home/guilherme/Documents/projects/app/src/utils/getRandomId.ts">
-        <metrics statements="6" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
-        <line num="3" count="0" type="stmt"/>
-        <line num="4" count="0" type="stmt"/>
-        <line num="6" count="0" type="stmt"/>
-        <line num="7" count="0" type="stmt"/>
-        <line num="8" count="0" type="stmt"/>
-        <line num="11" count="0" type="stmt"/>
+        <metrics statements="6" coveredstatements="6" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="3" count="2" type="stmt"/>
+        <line num="4" count="2" type="stmt"/>
+        <line num="6" count="2" type="stmt"/>
+        <line num="7" count="10" type="stmt"/>
+        <line num="8" count="10" type="stmt"/>
+        <line num="11" count="2" type="stmt"/>
       </file>
       <file name="hours.ts" path="/home/guilherme/Documents/projects/app/src/utils/hours.ts">
         <metrics statements="52" coveredstatements="52" conditionals="22" coveredconditionals="22" methods="9" coveredmethods="9"/>
@@ -1458,15 +1458,6 @@
       <file name="isProcudt.ts" path="/home/guilherme/Documents/projects/app/src/utils/isProcudt.ts">
         <metrics statements="1" coveredstatements="1" conditionals="7" coveredconditionals="7" methods="1" coveredmethods="1"/>
         <line num="4" count="6" type="stmt"/>
-      </file>
-      <file name="randomId.ts" path="/home/guilherme/Documents/projects/app/src/utils/randomId.ts">
-        <metrics statements="6" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
-        <line num="2" count="0" type="stmt"/>
-        <line num="3" count="0" type="stmt"/>
-        <line num="4" count="0" type="stmt"/>
-        <line num="6" count="0" type="stmt"/>
-        <line num="7" count="0" type="stmt"/>
-        <line num="10" count="0" type="stmt"/>
       </file>
     </package>
   </project>
